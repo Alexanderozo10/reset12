@@ -325,11 +325,11 @@ function openZimbraCompose(){window.open('https://correo.sithonduras.com/','_bla
 async function copyMailTech(){const t='Hola, necesito evaluar una integración segura de mi correo corporativo con una aplicación de productividad. ¿Me pueden confirmar: 1) servidor SMTP, 2) puerto SMTP, 3) tipo de seguridad (SSL/TLS/STARTTLS), y 4) si está habilitado el acceso a la API REST de Zimbra o algún mecanismo de autenticación para aplicaciones externas? No necesito compartir ninguna contraseña.';try{await navigator.clipboard.writeText(t);document.getElementById('mailTechStatus').textContent='✅ Solicitud copiada. No incluye contraseña.';toast('Solicitud copiada')}catch{document.getElementById('mailTechStatus').textContent=t}}
 function saveAgendaSettings(){data.agenda={breakfast:document.getElementById('timeBreakfast').value,lunch:document.getElementById('timeLunch').value,gym:document.getElementById('timeGym').value,dinner:document.getElementById('timeDinner').value,sleep:document.getElementById('timeSleep').value,measure:document.getElementById('timeMeasure').value};save();renderAgenda();toast('Horarios guardados')}
 function renderAgenda(){const a=data.agenda||{},vals={timeBreakfast:a.breakfast||'07:00',timeLunch:a.lunch||'13:00',timeGym:a.gym||'19:00',timeDinner:a.dinner||'21:15',timeSleep:a.sleep||'23:00',timeMeasure:a.measure||'06:00'};Object.entries(vals).forEach(([id,v])=>{const e=document.getElementById(id);if(e)e.value=v});const e=document.getElementById('todayAgenda');if(!e)return;const items=[['🍳',a.breakfast||'07:00','Desayuno'],['🍛',a.lunch||'13:00','Almuerzo'],['🏋️',a.gym||'19:00','Entrenamiento'],['🥗',a.dinner||'21:15','Cena'],['😴',a.sleep||'23:00','Dormir'],['📏',a.measure||'06:00','Medición semanal']];e.innerHTML=items.map(x=>`<div class="agenda-item"><div class="agenda-time">${x[0]} ${x[1]}</div><div class="agenda-title">${x[2]}</div></div>`).join('')}
-let calendarToken=sessionStorage.getItem('reset12_calendar_token')||null;const CALENDAR_SCOPE='https://www.googleapis.com/auth/calendar.events';
+let calendarToken=null;const CALENDAR_SCOPE='https://www.googleapis.com/auth/calendar.events';
 function calendarMsg(t){const e=document.getElementById('calendarStatus');if(e)e.textContent=t}
 function setCalendarTag(t){const e=document.getElementById('calendarTag');if(e)e.textContent=t}
-function connectCalendar(forceConsent=true){if(!currentUser){toast('Primero inicia sesión con Google');return}if(!window.google?.accounts?.oauth2){calendarMsg('Google todavía está cargando.');return}window._calendarTokenClient=google.accounts.oauth2.initTokenClient({client_id:CLIENT_ID,scope:CALENDAR_SCOPE,callback:async(resp)=>{if(resp.error){console.error('Calendar OAuth error',resp);calendarMsg('❌ No se pudo autorizar Calendar: '+(resp.error_description||resp.error));setCalendarTag('LOCAL');return}calendarToken=resp.access_token;sessionStorage.setItem('reset12_calendar_token',calendarToken);localStorage.setItem(userKey(currentUser.email,'reset12_calendar_connected'),'1');setCalendarTag('CLOUD');calendarMsg('🟢 Google Calendar conectado en esta sesión.');if(forceConsent)toast('Calendar conectado');await renderCalendarEvents()}});window._calendarTokenClient.requestAccessToken({prompt:forceConsent?'consent':''})}
-async function calendarFetch(url,options={}){if(!calendarToken)throw new Error('NO_CAL_TOKEN');options.headers=Object.assign({},options.headers||{},{Authorization:'Bearer '+calendarToken,'Content-Type':'application/json'});const r=await fetch(url,options);if(r.status===401){calendarToken=null;sessionStorage.removeItem('reset12_calendar_token');setCalendarTag('LOCAL');throw new Error('CAL_AUTH_EXPIRED')}if(!r.ok){const body=await r.text();console.error('Calendar API error',r.status,body);throw new Error('CAL_API_'+r.status+'_'+body)}return r}
+function connectCalendar(){if(!currentUser){toast('Primero inicia sesión con Google');return}if(!window.google?.accounts?.oauth2){calendarMsg('Google todavía está cargando.');return}window._calendarTokenClient=google.accounts.oauth2.initTokenClient({client_id:CLIENT_ID,scope:CALENDAR_SCOPE,callback:async(resp)=>{if(resp.error){console.error('Calendar OAuth error',resp);calendarMsg('❌ No se pudo autorizar Calendar: '+(resp.error_description||resp.error));setCalendarTag('LOCAL');return}calendarToken=resp.access_token;sessionStorage.setItem('reset12_calendar_token',calendarToken);localStorage.setItem(userKey(currentUser.email,'reset12_calendar_connected'),'1');setCalendarTag('CLOUD');calendarMsg('🟢 Google Calendar conectado en esta sesión.');toast('Calendar conectado');await renderCalendarEvents()}});window._calendarTokenClient.requestAccessToken({prompt:''})}
+async function calendarFetch(url,options={}){if(!calendarToken)throw new Error('NO_CAL_TOKEN');options.headers=Object.assign({},options.headers||{},{Authorization:'Bearer '+calendarToken,'Content-Type':'application/json'});const r=await fetch(url,options);if(r.status===401){calendarToken=null;setCalendarTag('LOCAL');throw new Error('CAL_AUTH_EXPIRED')}if(!r.ok){const body=await r.text();console.error('Calendar API error',r.status,body);throw new Error('CAL_API_'+r.status+'_'+body)}return r}
 function isoFor(date,time){return new Date(`${date}T${time||'07:00'}:00-05:00`).toISOString()}
 function eventId(date,type){return ('reset12'+date.replace(/-/g,'')+type).replace(/[^a-v0-9]/gi,'').toLowerCase()}
 function calendarEvent(date,type,time,title,duration){const start=isoFor(date,time),end=new Date(new Date(start).getTime()+duration*60000).toISOString();return {id:eventId(date,type),summary:'RESET 12 · '+title,description:'Evento creado por RESET 12 · 84 días · constancia sobre perfección.',start:{dateTime:start,timeZone:'America/Bogota'},end:{dateTime:end,timeZone:'America/Bogota'},reminders:{useDefault:true}}}
@@ -358,8 +358,8 @@ async function createCalendarEventFromForm(){
   const status=document.getElementById('eventCreateStatus');if(status)status.textContent='Creando evento…';
   try{const r=await calendarFetch(url,{method:'POST',body:JSON.stringify(event)});const created=await r.json();let msg='🟢 Evento creado en Google Calendar.';if(created.htmlLink)msg+=' <a href="'+escHtml(created.htmlLink)+'" target="_blank" rel="noopener">Abrir Calendar</a>';if(created.hangoutLink)msg+=' · <a href="'+escHtml(created.hangoutLink)+'" target="_blank" rel="noopener">Abrir Meet</a>';if(status)status.innerHTML=msg;toast('Evento agendado');document.getElementById('eventTitle').value='';document.getElementById('eventDescription').value='';document.getElementById('eventLocation').value='';document.getElementById('eventAttendees').value='';document.getElementById('eventMeet').checked=false;await renderCalendarEvents()}catch(e){console.error(e);if(status)status.textContent='❌ No se pudo crear: '+(e.message||'error de Calendar');toast('No se pudo crear el evento')}}
 async function renderCalendarEvents(){const e=document.getElementById('calendarEvents');if(!e)return;if(!calendarToken){e.innerHTML='<div class="empty">Conecta Calendar para ver tus próximos eventos.</div>';return}try{const now=new Date().toISOString(),r=await calendarFetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin='+encodeURIComponent(now)+'&maxResults=10&singleEvents=true&orderBy=startTime');const j=await r.json();if(!j.items?.length){e.innerHTML='<div class="empty">No hay eventos próximos.</div>';return}e.innerHTML=j.items.map(x=>{const st=x.start?.dateTime||x.start?.date;const meet=x.hangoutLink?` · <a href="${escHtml(x.hangoutLink)}" target="_blank" rel="noopener">Meet</a>`:'';return `<div class="check"><span><b>${escHtml(x.summary||'Sin título')}</b><br><span class="small">${new Date(st).toLocaleString('es-CO',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}${meet}</span></span></div>`}).join('')}catch(err){if(err.message==='CAL_AUTH_EXPIRED')calendarMsg('Sesión de Calendar vencida. Pulsa Conectar.');e.innerHTML='<div class="empty">No fue posible leer Calendar.</div>'}}
-function bootCalendar(){const connected=currentUser&&localStorage.getItem(userKey(currentUser.email,'reset12_calendar_connected'))==='1';if(calendarToken){setCalendarTag('CLOUD');calendarMsg('🟢 Calendar disponible en esta sesión.')}else if(connected){setCalendarTag('LOCAL');calendarMsg('Calendar autorizado anteriormente. Pulsa Conectar para usarlo en esta sesión.')}setDefaultEventDate();calcEventTimes()}
-let driveToken=sessionStorage.getItem('reset12_drive_token')||null;
+function bootCalendar(){const connected=currentUser&&localStorage.getItem(userKey(currentUser.email,'reset12_calendar_connected'))==='1';if(connected){setCalendarTag('CLOUD');calendarMsg('Calendar autorizado anteriormente. Pulsa Conectar para usarlo en esta sesión.')}setDefaultEventDate();calcEventTimes()}
+let driveToken=null;
 let driveFolderId=null;
 let driveBackupFileId=null;
 const DRIVE_SCOPE='https://www.googleapis.com/auth/drive.file';
@@ -375,7 +375,6 @@ function connectDrive(){
     callback:async(resp)=>{
       if(resp.error){driveMsg('No se pudo autorizar Drive.');setSyncTag('LOCAL');return}
       driveToken=resp.access_token;
-      sessionStorage.setItem('reset12_drive_token',driveToken);
       localStorage.setItem(userKey(currentUser.email,'reset12_drive_connected'),'1');
       driveMsg('🟢 Drive conectado. Sincronización automática activa.');
       setSyncTag('CLOUD');
@@ -390,7 +389,7 @@ async function driveFetch(url,options={}){
   if(!driveToken)throw new Error('NO_TOKEN');
   options.headers=Object.assign({},options.headers||{},{'Authorization':'Bearer '+driveToken});
   const r=await fetch(url,options);
-  if(r.status===401){driveToken=null;sessionStorage.removeItem('reset12_drive_token');setSyncTag('LOCAL');throw new Error('AUTH_EXPIRED')}
+  if(r.status===401){driveToken=null;setSyncTag('LOCAL');throw new Error('AUTH_EXPIRED')}
   if(!r.ok)throw new Error(await r.text());
   return r;
 }
@@ -421,7 +420,7 @@ async function findResetBackup(folder){
 async function backupDrive(silent=false){
   try{
     if(!currentUser){if(!silent)toast('Primero inicia sesión con Google');return}
-    if(!driveToken){if(!silent)connectDrive();return}
+    if(!driveToken){if(!silent){driveMsg('Conecta Google Drive para guardar el respaldo.');toast('Pulsa Conectar Drive')}return}
     if(!silent)driveMsg('Guardando respaldo…');
     const folder=await findResetFolder();
     const payload=JSON.stringify({
@@ -498,13 +497,10 @@ function finishLogin(profile){
   document.getElementById('loginOverlay').style.display='none';
   showAccount();
   const connected=localStorage.getItem(userKey(currentUser.email,'reset12_drive_connected'))==='1';
-  if(connected && driveToken){
-    setSyncTag('CLOUD');
-    const st=document.getElementById('profileStatus'); if(st)st.textContent='☁️ Drive sincronizado';
-    driveMsg('☁️ Drive disponible en esta sesión.');
-  } else if(connected){
+  if(connected){
     setSyncTag('LOCAL');
-    driveMsg('Drive autorizado anteriormente. Pulsa Conectar solo cuando quieras usarlo.');
+    const st=document.getElementById('profileStatus'); if(st)st.textContent='🔐 Sesión activa · Drive disponible al pulsar Conectar';
+    driveMsg('Drive autorizado anteriormente. Pulsa Conectar Drive cuando quieras usarlo.');
   }
   render();
   bootCalendar();
@@ -530,8 +526,10 @@ function showAccountInfo(){
   const last=localStorage.getItem(userKey(currentUser.email,'reset12_last_drive_backup'));
   alert('RESET 12\\n\\nCuenta: '+currentUser.email+'\\nNombre: '+(currentUser.name||'Usuario')+'\\n\\n'+(driveToken?'☁️ Drive: conectado':'📱 Drive: no conectado')+(last?'\\nÚltimo respaldo: '+new Date(last).toLocaleString('es-CO'):''));
 }
-function logoutReset12(){calendarToken=null;sessionStorage.removeItem('reset12_calendar_token');driveToken=null;sessionStorage.removeItem('reset12_drive_token');
+function logoutReset12(){
   if(!confirm('¿Cerrar sesión de RESET 12 en este dispositivo? Tus datos locales y el respaldo de Drive NO se borrarán.'))return;
+  try{if(window.google?.accounts?.id?.disableAutoSelect)google.accounts.id.disableAutoSelect()}catch{}
+  calendarToken=null;sessionStorage.removeItem('reset12_calendar_token');driveToken=null;sessionStorage.removeItem('reset12_drive_token');
   localStorage.removeItem('reset12_user');
   currentUser=null;
   driveToken=null;
