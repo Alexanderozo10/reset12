@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="RESET 12">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
-<title>RESET 12 · Tu transformación</title>
+<title>RESET 12 V7 · Tu transformación</title>
 <style>
 :root{--bg:#f4f5f7;--card:#fff;--ink:#111827;--muted:#6b7280;--line:#e5e7eb;--accent:#111827;--ok:#16a34a;--warn:#d97706;--danger:#dc2626}
 *{box-sizing:border-box}html{background:var(--bg)}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);padding-bottom:92px}
@@ -38,6 +38,17 @@ input,textarea,select{width:100%;padding:11px 12px;border:1px solid #d1d5db;bord
 .login-sub{color:var(--muted);line-height:1.5;margin:0 0 20px}
 .google-wrap{display:flex;justify-content:center;margin:16px 0 10px}
 .login-note{font-size:11px;color:var(--muted);text-align:center;line-height:1.45}
+.profile-card{border-radius:20px}
+.profile-main{display:flex;align-items:center;gap:12px}
+.profile-avatar{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#f1f5f9;font-size:22px;font-weight:900;overflow:hidden}
+.profile-avatar img{width:100%;height:100%;object-fit:cover}
+.profile-info{min-width:0;flex:1}
+.profile-greeting{font-size:18px;font-weight:900;letter-spacing:-.3px}
+.profile-email{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.profile-status{font-size:11px;font-weight:800;margin-top:3px}
+.profile-actions{display:flex;gap:8px;margin-top:12px}
+.profile-actions .btn{flex:1;padding:10px 8px}
+
 
 @media(min-width:600px){main{padding-left:20px;padding-right:20px}.nav{border-left:1px solid var(--line);border-right:1px solid var(--line);border-radius:18px 18px 0 0}}
 </style>
@@ -57,6 +68,21 @@ input,textarea,select{width:100%;padding:11px 12px;border:1px solid #d1d5db;bord
   </div>
 </div>
 
+
+<div class="card profile-card" id="profileCard" style="display:none;margin:12px 18px 0">
+  <div class="profile-main">
+    <div class="profile-avatar" id="profileAvatar">👤</div>
+    <div class="profile-info">
+      <div class="profile-greeting">Hola, <span id="profileName">Alexander</span> 👋</div>
+      <div class="small" id="profileEmail">Cuenta de Google</div>
+      <div class="profile-status" id="profileStatus">🔐 Sesión activa</div>
+    </div>
+  </div>
+  <div class="profile-actions">
+    <button class="btn secondary" onclick="showAccountInfo()">Mi cuenta</button>
+    <button class="btn secondary" onclick="logoutReset12()">Cerrar sesión</button>
+  </div>
+</div>
 <header><div class="top"><div><div class="brand">RESET 12</div><div class="sub">84 días · constancia sobre perfección</div></div><div><div class="xp" id="xpPill">0 XP · Nivel 1</div><div class="account-chip" id="accountChip" style="display:none"></div><div class="sub" style="text-align:right;margin-top:3px">🟢 Guardado local</div></div></div></header>
 
 <main>
@@ -337,7 +363,25 @@ function decodeJwtPayload(token){
 }
 function showAccount(){
   const chip=document.getElementById('accountChip');
-  if(chip&&currentUser){chip.textContent='👤 '+(currentUser.name||currentUser.email);chip.style.display='block'}
+  const card=document.getElementById('profileCard');
+  const name=document.getElementById('profileName');
+  const email=document.getElementById('profileEmail');
+  const avatar=document.getElementById('profileAvatar');
+  if(!currentUser)return;
+  const displayName=currentUser.name||currentUser.email.split('@')[0]||'Usuario';
+  if(chip){chip.textContent='👤 '+displayName;chip.style.display='block'}
+  if(card)card.style.display='block';
+  if(name)name.textContent=displayName;
+  if(email)email.textContent=currentUser.email;
+  if(avatar){
+    if(currentUser.picture){
+      avatar.innerHTML='<img alt="" src="'+currentUser.picture.replace(/"/g,'&quot;')+'">';
+    }else{
+      avatar.textContent=displayName.charAt(0).toUpperCase();
+    }
+  }
+  const status=document.getElementById('profileStatus');
+  if(status)status.textContent=driveToken?'☁️ Drive sincronizado':'🔐 Sesión activa';
 }
 function finishLogin(profile){
   currentUser={email:profile.email||'',name:profile.name||'Usuario',picture:profile.picture||''};
@@ -349,6 +393,7 @@ function finishLogin(profile){
   const connected=localStorage.getItem(userKey(currentUser.email,'reset12_drive_connected'))==='1';
   if(connected){
     setSyncTag('CLOUD');
+    const st=document.getElementById('profileStatus'); if(st)st.textContent='☁️ Drive sincronizado';
     driveMsg('Conectando Drive…');
     setTimeout(()=>connectDrive(),700);
   }
@@ -369,6 +414,23 @@ function initGoogleLogin(){
   google.accounts.id.renderButton(document.getElementById('googleSignInButton'),{
     theme:'outline',size:'large',type:'standard',text:'signin_with',shape:'pill',logo_alignment:'left',width:280
   });
+}
+function showAccountInfo(){
+  if(!currentUser)return;
+  const last=localStorage.getItem(userKey(currentUser.email,'reset12_last_drive_backup'));
+  alert('RESET 12\\n\\nCuenta: '+currentUser.email+'\\nNombre: '+(currentUser.name||'Usuario')+'\\n\\n'+(driveToken?'☁️ Drive: conectado':'📱 Drive: no conectado')+(last?'\\nÚltimo respaldo: '+new Date(last).toLocaleString('es-CO'):''));
+}
+function logoutReset12(){
+  if(!confirm('¿Cerrar sesión de RESET 12 en este dispositivo? Tus datos locales y el respaldo de Drive NO se borrarán.'))return;
+  localStorage.removeItem('reset12_user');
+  currentUser=null;
+  driveToken=null;
+  driveFolderId=null;
+  driveBackupFileId=null;
+  document.getElementById('profileCard').style.display='none';
+  document.getElementById('accountChip').style.display='none';
+  document.getElementById('loginOverlay').style.display='flex';
+  initGoogleLogin();
 }
 function boot(){
   const saved=localStorage.getItem('reset12_user');
