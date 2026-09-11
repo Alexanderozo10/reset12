@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RESET 12">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<title>RESET 12</title>
+<style>
+:root{--bg:#f4f5f7;--card:#fff;--ink:#111827;--muted:#6b7280;--line:#e5e7eb;--accent:#111827;--ok:#16a34a;--warn:#d97706;--danger:#dc2626}
+*{box-sizing:border-box}html{background:var(--bg)}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);padding-bottom:92px}
+header{position:sticky;top:0;z-index:10;background:rgba(244,245,247,.94);backdrop-filter:blur(14px);padding:14px 16px 10px;border-bottom:1px solid var(--line)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{font-weight:900;font-size:22px;letter-spacing:-.5px}.sub{font-size:12px;color:var(--muted)}
+.xp{font-size:12px;font-weight:800;background:#fff;border:1px solid var(--line);padding:7px 10px;border-radius:999px}
+main{max-width:720px;margin:auto;padding:14px 14px 24px}.screen{display:none}.screen.active{display:block}
+h1{font-size:28px;line-height:1.05;margin:8px 0 4px}.lead{color:var(--muted);margin:0 0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:15px;margin:10px 0;box-shadow:0 2px 8px rgba(17,24,39,.04)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{padding:13px;border-radius:15px;background:#f9fafb;border:1px solid var(--line)}.num{font-size:24px;font-weight:900}.label{font-size:12px;color:var(--muted)}
+.progress{height:10px;background:#e5e7eb;border-radius:999px;overflow:hidden}.bar{height:100%;background:#111827;width:0;transition:.25s}
+.check{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.check:last-child{border:0}.check input{width:23px;height:23px;accent-color:#111827}.check span{flex:1}.done{text-decoration:line-through;color:var(--muted)}
+button,.btn{border:0;border-radius:12px;padding:11px 13px;font-weight:800;background:#111827;color:white;cursor:pointer}.btn.secondary{background:#f3f4f6;color:#111827;border:1px solid var(--line)}.btn.danger{background:#fee2e2;color:#991b1b}
+input,textarea,select{width:100%;padding:11px 12px;border:1px solid #d1d5db;border-radius:12px;background:#fff;color:var(--ink);font:inherit}textarea{min-height:95px;resize:vertical}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}
+.tag{font-size:11px;font-weight:800;border-radius:999px;padding:5px 8px;background:#f3f4f6;color:#374151}
+.nav{position:fixed;bottom:0;left:0;right:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:8px max(8px,env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom));max-width:720px;margin:auto}
+.nav button{background:transparent;color:#6b7280;padding:8px 3px;font-size:11px}.nav button.active{color:#111827;font-weight:900}.ico{display:block;font-size:19px;margin-bottom:2px}
+.exercise{border:1px solid var(--line);border-radius:14px;padding:12px;margin:9px 0}.exercise .name{font-weight:900}.two{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.toast{position:fixed;left:50%;bottom:82px;transform:translateX(-50%);background:#111827;color:white;padding:10px 14px;border-radius:999px;font-size:12px;display:none;z-index:30}.toast.show{display:block}
+.small{font-size:12px;color:var(--muted)}.center{text-align:center}.empty{padding:24px;text-align:center;color:var(--muted)}
+@media(min-width:600px){main{padding-left:20px;padding-right:20px}.nav{border-left:1px solid var(--line);border-right:1px solid var(--line);border-radius:18px 18px 0 0}}
+</style>
+</head>
+<body>
+<header><div class="top"><div><div class="brand">RESET 12</div><div class="sub">84 días · constancia sobre perfección</div></div><div><div class="xp" id="xpPill">0 XP · Nivel 1</div><div class="sub" style="text-align:right;margin-top:3px">🟢 Guardado local</div></div></div></header>
+
+<main>
+<section id="home" class="screen active">
+  <h1>Hoy importa.</h1><p class="lead" id="todayLabel"></p>
+  <div class="card">
+    <div class="row"><b>Progreso de hoy</b><span id="dayPct">0%</span></div>
+    <div class="progress" style="margin-top:10px"><div class="bar" id="dayBar"></div></div>
+  </div>
+  <div class="grid">
+    <div class="stat"><div class="num" id="streak">0</div><div class="label">días de racha</div></div>
+    <div class="stat"><div class="num" id="dayNum">1/84</div><div class="label">día del RESET</div></div>
+    <div class="stat"><div class="num" id="weightHome">—</div><div class="label">peso actual</div></div>
+    <div class="stat"><div class="num" id="waistHome">—</div><div class="label">cintura</div></div>
+  </div>
+  <div class="card"><div class="row"><b>Mensaje del día</b><span class="tag">RESET 12</span></div><p id="quote">No necesitas hacerlo perfecto. Necesitas hacerlo hoy.</p></div>
+  <button style="width:100%;margin-top:4px" onclick="show('check')">✓ HACER MI CHECKLIST</button>
+</section>
+
+<section id="check" class="screen">
+  <h1>Checklist</h1><p class="lead">Marca lo que sí hiciste. Sin drama si algo queda pendiente.</p>
+  <div class="card" id="checks"></div>
+  <div class="card">
+    <b>Datos rápidos</b>
+    <div class="formgrid" style="margin-top:10px">
+      <div><label class="small">Pasos</label><input id="steps" type="number" min="0" placeholder="8000"></div>
+      <div><label class="small">Agua (L)</label><input id="water" type="number" min="0" step=".1" placeholder="2.5"></div>
+      <div><label class="small">Sueño (h)</label><input id="sleep" type="number" min="0" step=".1" placeholder="7"></div>
+      <div><label class="small">Calorías (opcional)</label><input id="calories" type="number" min="0" placeholder="2000"></div>
+      <div class="full"><label class="small">Nota del día</label><textarea id="note" placeholder="¿Cómo te fue hoy?"></textarea></div>
+    </div>
+    <button style="margin-top:10px;width:100%" onclick="saveDay()">Guardar día</button>
+  </div>
+</section>
+
+<section id="food" class="screen">
+  <h1>Nutrición</h1><p class="lead">3 comidas. Proteína en cada una. Sencillo y repetible.</p>
+  <div class="card"><b>Objetivo diario</b><div class="grid" style="margin-top:10px">
+    <div class="stat"><div class="num">≈ 2.000</div><div class="label">kcal iniciales</div></div>
+    <div class="stat"><div class="num">150–170 g</div><div class="label">proteína</div></div>
+  </div></div>
+  <div class="card"><b>Plantilla de comidas</b>
+    <div class="check"><span><b>🍳 Desayuno</b><br><span class="small">Huevos + proteína + fruta + vegetales / carbohidrato según el día.</span></span></div>
+    <div class="check"><span><b>🍗 Almuerzo</b><br><span class="small">Pollo/carne magra + abundantes vegetales + porción medida de arroz/papa.</span></span></div>
+    <div class="check"><span><b>🥩 Cena</b><br><span class="small">Proteína + vegetales; ajustar carbohidrato según entrenamiento y hambre.</span></span></div>
+  </div>
+  <div class="card"><b>Reglas RESET</b>
+    <p class="small">Prioriza agua, alimentos poco procesados y porciones consistentes. No hace falta eliminar grupos de alimentos ni pasar hambre.</p>
+  </div>
+</section>
+
+<section id="gym" class="screen">
+  <h1>Entrenamiento</h1><p class="lead">Vuelve progresivamente. La primera meta es recuperar el hábito.</p>
+  <div class="card"><b>Semana actual</b><p class="small">Objetivo: fuerza 4 días la primera semana y subir gradualmente. Si hay dolor inusual, detente y consulta.</p></div>
+  <div id="exercises"></div>
+</section>
+
+<section id="progress" class="screen">
+  <h1>Progreso</h1><p class="lead">Mide tendencia, no un solo número.</p>
+  <div class="card">
+    <div class="formgrid">
+      <div><label class="small">Peso (kg)</label><input id="weight" type="number" step=".1" min="0"></div>
+      <div><label class="small">Cintura (cm)</label><input id="waist" type="number" step=".1" min="0"></div>
+    </div>
+    <button style="width:100%;margin-top:10px" onclick="saveProgress()">Guardar medición</button>
+  </div>
+  <div class="card"><b>Historial</b><div id="history"></div></div>
+  <div class="card"><b>☁️ Google Drive</b>
+<p class="small">Conecta tu Drive para guardar una copia de RESET 12 en la nube. Necesitas configurar un ID de cliente OAuth de Google Cloud.</p>
+<div class="formgrid">
+  <div class="full"><label class="small">Google OAuth Client ID</label><input id="clientId" placeholder="1234567890-xxxx.apps.googleusercontent.com"></div>
+</div>
+<div class="two" style="margin-top:10px">
+  <button class="btn secondary" onclick="connectDrive()">Conectar</button>
+  <button class="btn" onclick="backupDrive()">☁️ Guardar en Drive</button>
+</div>
+<div id="driveStatus" class="small" style="margin-top:8px"></div>
+</div>
+<div class="card"><b>Backup</b><p class="small">Exporta tus datos para no depender de un solo teléfono.</p>
+    <div class="two"><button class="btn secondary" onclick="exportData()">Exportar</button><label class="btn secondary center">Importar<input type="file" accept=".json" onchange="importData(event)" style="display:none"></label></div>
+  </div>
+  <div class="card"><button class="btn danger" style="width:100%" onclick="resetAll()">Borrar todos los datos</button></div>
+</section>
+</main>
+
+<nav class="nav">
+ <button data-tab="home" class="active" onclick="show('home')"><span class="ico">⌂</span>Inicio</button>
+ <button data-tab="check" onclick="show('check')"><span class="ico">✓</span>Hoy</button>
+ <button data-tab="food" onclick="show('food')"><span class="ico">🍽</span>Comida</button>
+ <button data-tab="gym" onclick="show('gym')"><span class="ico">🏋</span>Gym</button>
+ <button data-tab="progress" onclick="show('progress')"><span class="ico">↗</span>Progreso</button>
+</nav>
+<div id="toast" class="toast"></div>
+
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+const KEY='reset12_v5';
+const startKey='reset12_start';
+const checklist=[
+ ['water','Tomé suficiente agua'],['protein','Cumplí mi proteína del día'],['meals','Respeté mis 3 comidas'],['steps','Cumplí mis pasos'],['training','Entrené / hice actividad'],['sleep','Dormí lo planificado'],['discipline','Evité picoteos innecesarios'],['mind','Hice algo positivo por mí']
+];
+const exercises=[
+ ['Día 1 · Tren superior','Press pecho','Remo','Press hombro','Jalón al pecho','Bíceps','Tríceps'],
+ ['Día 2 · Tren inferior','Prensa','Peso muerto rumano','Extensión de cuádriceps','Curl femoral','Gemelos','Caminata 10–15 min'],
+ ['Día 3 · Descanso activo','Caminata 30–45 min','Movilidad 10 min'],
+ ['Día 4 · Tren superior','Press inclinado','Remo sentado','Elevaciones laterales','Jalón','Bíceps','Tríceps'],
+ ['Día 5 · Tren inferior','Sentadilla/prensa','Peso muerto rumano','Extensión','Curl femoral','Gemelos','Caminata 10–20 min']
+];
+let data=JSON.parse(localStorage.getItem(KEY)||'{"days":{},"measurements":[],"xp":0}');
+function today(){return new Date().toISOString().slice(0,10)}
+function getDay(){data.days[today()] ||= {checks:{},steps:'',water:'',sleep:'',calories:'',note:'',exercises:{}};return data.days[today()]}
+function save(){localStorage.setItem(KEY,JSON.stringify(data))}
+function toast(t){let e=document.getElementById('toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1600)}
+function show(id){
+ document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');
+ document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===id));
+ render();
+}
+function render(){
+ let d=getDay();
+ document.getElementById('todayLabel').textContent=new Date().toLocaleDateString('es-CO',{weekday:'long',day:'numeric',month:'long'});
+ const n=checklist.filter(x=>d.checks[x[0]]).length,p=Math.round(n/checklist.length*100);
+ document.getElementById('dayPct').textContent=p+'%';document.getElementById('dayBar').style.width=p+'%';
+ document.getElementById('dayNum').textContent=dayIndex()+'/84';
+ document.getElementById('streak').textContent=streak();
+ const last=data.measurements.at(-1);document.getElementById('weightHome').textContent=last?last.weight+' kg':'—';document.getElementById('waistHome').textContent=last?last.waist+' cm':'—';
+ document.getElementById('xpPill').textContent=data.xp+' XP · Nivel '+(Math.floor(data.xp/500)+1);
+ document.getElementById('checks').innerHTML=checklist.map(([k,t])=>`<label class="check"><input type="checkbox" ${d.checks[k]?'checked':''} onchange="toggleCheck('${k}',this.checked)"><span class="${d.checks[k]?'done':''}">${t}</span></label>`).join('');
+ ['steps','water','sleep','calories','note'].forEach(k=>document.getElementById(k).value=d[k]||'');
+ document.getElementById('weight').value=last?.weight||'';document.getElementById('waist').value=last?.waist||'';
+ renderExercises();renderHistory();
+}
+function toggleCheck(k,v){let d=getDay();if(d.checks[k]===v)return;d.checks[k]=v;data.xp+=v?25:-25;if(data.xp<0)data.xp=0;save();render();toast(v?'✓ Hecho · +25 XP':'Marcado como pendiente')}
+function saveDay(){let d=getDay();['steps','water','sleep','calories','note'].forEach(k=>d[k]=document.getElementById(k).value);save();toast('Día guardado');render()}
+function renderExercises(){
+ const idx=((dayIndex()-1)%5), arr=exercises[idx];
+ document.getElementById('exercises').innerHTML=`<div class="card"><b>${arr[0]}</b><div class="small">Registra peso y repeticiones para aprender de tu progreso.</div></div>`+
+ arr.slice(1).map((name,i)=>{let k='e'+i,v=getDay().exercises[k]||{};return `<div class="exercise"><div class="name">${name}</div><div class="two"><input placeholder="kg" type="number" step=".5" value="${v.kg||''}" onchange="ex('${k}','kg',this.value)"><input placeholder="reps" type="number" value="${v.reps||''}" onchange="ex('${k}','reps',this.value)"></div></div>`}).join('');
+}
+function ex(k,f,v){getDay().exercises[k]||={};getDay().exercises[k][f]=v;save()}
+function saveProgress(){let w=parseFloat(document.getElementById('weight').value),wa=parseFloat(document.getElementById('waist').value);if(!w||!wa){toast('Completa peso y cintura');return}data.measurements.push({date:today(),weight:w,waist:wa});save();toast('Medición guardada');render()}
+function renderHistory(){let h=document.getElementById('history');if(!data.measurements.length){h.innerHTML='<div class="empty">Aún no hay mediciones.</div>';return}h.innerHTML=data.measurements.slice().reverse().map(x=>`<div class="check"><span><b>${x.date}</b><br><span class="small">${x.weight} kg · ${x.waist} cm cintura</span></span></div>`).join('')}
+function dayIndex(){if(!localStorage.getItem(startKey))localStorage.setItem(startKey,today());let a=new Date(localStorage.getItem(startKey)),b=new Date(today());return Math.min(84,Math.max(1,Math.floor((b-a)/86400000)+1))}
+function streak(){let s=0,d=new Date();for(let i=0;i<84;i++){let k=d.toISOString().slice(0,10),x=data.days[k];if(!x)break;let n=checklist.filter(q=>x.checks?.[q[0]]).length;if(n<5)break;s++;d.setDate(d.getDate()-1)}return s}
+function exportData(){let blob=new Blob([JSON.stringify({data,start:localStorage.getItem(startKey)},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='RESET12-backup-'+today()+'.json';a.click();URL.revokeObjectURL(a.href)}
+function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let o=JSON.parse(r.result);data=o.data;localStorage.setItem(startKey,o.start||today());save();render();toast('Backup importado')}catch{toast('Archivo no válido')}};r.readAsText(f)}
+function resetAll(){if(confirm('¿Borrar todos tus datos de RESET 12? Esta acción no se puede deshacer.')){localStorage.removeItem(KEY);localStorage.removeItem(startKey);location.reload()}}
+if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
+
+let driveToken=null;
+let driveClientReady=false;
+const DRIVE_SCOPE='https://www.googleapis.com/auth/drive.file';
+function getClientId(){return document.getElementById('clientId')?.value?.trim() || localStorage.getItem('reset12_client_id') || ''}
+function driveMsg(t){const e=document.getElementById('driveStatus');if(e)e.textContent=t}
+function connectDrive(){
+  const id=getClientId();
+  if(!id){driveMsg('Pega primero tu Client ID de Google Cloud.');toast('Falta Client ID');return}
+  localStorage.setItem('reset12_client_id',id);
+  if(!window.google?.accounts?.oauth2){driveMsg('Google todavía está cargando. Intenta de nuevo en unos segundos.');return}
+  window._driveTokenClient=google.accounts.oauth2.initTokenClient({
+    client_id:id, scope:DRIVE_SCOPE,
+    callback:(resp)=>{
+      if(resp.error){driveMsg('No se pudo autorizar Drive.');return}
+      driveToken=resp.access_token; localStorage.setItem('reset12_drive_connected','1');
+      driveMsg('🟢 Drive conectado.'); toast('Drive conectado');
+    }
+  });
+  window._driveTokenClient.requestAccessToken({prompt:''});
+}
+async function driveFetch(url, options={}){
+  if(!driveToken) throw new Error('NO_TOKEN');
+  options.headers=Object.assign({},options.headers||{}, {'Authorization':'Bearer '+driveToken});
+  const r=await fetch(url,options);
+  if(!r.ok) throw new Error(await r.text());
+  return r;
+}
+async function findResetFolder(){
+  const q=encodeURIComponent("name='RESET 12' and mimeType='application/vnd.google-apps.folder' and trashed=false");
+  const r=await driveFetch('https://www.googleapis.com/drive/v3/files?q='+q+'&spaces=drive&fields=files(id,name)');
+  const j=await r.json();
+  if(j.files?.length)return j.files[0].id;
+  const body={name:'RESET 12',mimeType:'application/vnd.google-apps.folder'};
+  const c=await driveFetch('https://www.googleapis.com/drive/v3/files?fields=id,name',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  return (await c.json()).id;
+}
+async function backupDrive(){
+  try{
+    if(!driveToken){connectDrive(); return}
+    driveMsg('Guardando respaldo…');
+    const folder=await findResetFolder();
+    const payload=JSON.stringify({version:'RESET12-V6',savedAt:new Date().toISOString(),data,start:localStorage.getItem(startKey)},null,2);
+    const meta={name:'RESET12-backup.json',mimeType:'application/json',parents:[folder]};
+    const boundary='reset12_'+Date.now();
+    const body=new Blob([
+      '--'+boundary+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n',
+      JSON.stringify(meta),'\r\n--'+boundary+'\r\nContent-Type: application/json\r\n\r\n',
+      payload,'\r\n--'+boundary+'--'
+    ]);
+    const r=await driveFetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,modifiedTime',{
+      method:'POST',
+      headers:{'Content-Type':'multipart/related; boundary='+boundary},
+      body
+    });
+    const j=await r.json();
+    localStorage.setItem('reset12_last_drive_backup',new Date().toISOString());
+    driveMsg('🟢 Último respaldo: '+new Date().toLocaleString('es-CO'));
+    toast('☁️ Respaldo guardado');
+  }catch(e){
+    console.error(e);
+    driveMsg('No se pudo guardar. Revisa la autorización y el Client ID.');
+    toast('Error con Drive');
+  }
+}
+window.addEventListener('load',()=>{
+  const c=document.getElementById('clientId');
+  if(c)c.value=localStorage.getItem('reset12_client_id')||'';
+  const last=localStorage.getItem('reset12_last_drive_backup');
+  if(last)driveMsg('Último respaldo: '+new Date(last).toLocaleString('es-CO'));
+});
+
+render();
+</script>
+</body></html>
