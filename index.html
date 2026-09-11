@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="RESET 12">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
-<title>RESET 12</title>
+<title>RESET 12 · Tu transformación</title>
 <style>
 :root{--bg:#f4f5f7;--card:#fff;--ink:#111827;--muted:#6b7280;--line:#e5e7eb;--accent:#111827;--ok:#16a34a;--warn:#d97706;--danger:#dc2626}
 *{box-sizing:border-box}html{background:var(--bg)}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);padding-bottom:92px}
@@ -31,11 +31,33 @@ input,textarea,select{width:100%;padding:11px 12px;border:1px solid #d1d5db;bord
 .exercise{border:1px solid var(--line);border-radius:14px;padding:12px;margin:9px 0}.exercise .name{font-weight:900}.two{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
 .toast{position:fixed;left:50%;bottom:82px;transform:translateX(-50%);background:#111827;color:white;padding:10px 14px;border-radius:999px;font-size:12px;display:none;z-index:30}.toast.show{display:block}
 .small{font-size:12px;color:var(--muted)}.center{text-align:center}.empty{padding:24px;text-align:center;color:var(--muted)}
+.account-chip{font-size:11px;font-weight:800;background:#f3f4f6;border:1px solid var(--line);padding:6px 9px;border-radius:999px;margin-top:5px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.login-overlay{position:fixed;inset:0;z-index:100;background:linear-gradient(180deg,#f4f5f7,#fff);display:flex;align-items:center;justify-content:center;padding:22px}
+.login-card{width:min(440px,100%);background:#fff;border:1px solid var(--line);border-radius:24px;padding:26px;box-shadow:0 12px 40px rgba(17,24,39,.10)}
+.login-logo{font-size:34px;font-weight:950;letter-spacing:-1.5px;margin-bottom:6px}
+.login-sub{color:var(--muted);line-height:1.5;margin:0 0 20px}
+.google-wrap{display:flex;justify-content:center;margin:16px 0 10px}
+.login-note{font-size:11px;color:var(--muted);text-align:center;line-height:1.45}
+
 @media(min-width:600px){main{padding-left:20px;padding-right:20px}.nav{border-left:1px solid var(--line);border-right:1px solid var(--line);border-radius:18px 18px 0 0}}
 </style>
 </head>
 <body>
-<header><div class="top"><div><div class="brand">RESET 12</div><div class="sub">84 días · constancia sobre perfección</div></div><div><div class="xp" id="xpPill">0 XP · Nivel 1</div><div class="sub" style="text-align:right;margin-top:3px">🟢 Guardado local</div></div></div></header>
+
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-card">
+    <div class="login-logo">RESET 12</div>
+    <p class="login-sub">Tu transformación empieza hoy.<br>Inicia sesión para acceder a tu progreso personal.</p>
+    <div class="card" style="margin:0 0 14px;background:#f9fafb">
+      <b>🔐 Acceso con Google</b>
+      <p class="small" style="margin-bottom:0">Usaremos tu cuenta de Google para identificar tu perfil. Tu progreso seguirá guardándose localmente y podrás sincronizarlo con Drive.</p>
+    </div>
+    <div class="google-wrap"><div id="googleSignInButton"></div></div>
+    <p class="login-note">No compartas contraseñas con RESET 12. La autenticación se realiza mediante Google.</p>
+  </div>
+</div>
+
+<header><div class="top"><div><div class="brand">RESET 12</div><div class="sub">84 días · constancia sobre perfección</div></div><div><div class="xp" id="xpPill">0 XP · Nivel 1</div><div class="account-chip" id="accountChip" style="display:none"></div><div class="sub" style="text-align:right;margin-top:3px">🟢 Guardado local</div></div></div></header>
 
 <main>
 <section id="home" class="screen active">
@@ -102,14 +124,11 @@ input,textarea,select{width:100%;padding:11px 12px;border:1px solid #d1d5db;bord
     <button style="width:100%;margin-top:10px" onclick="saveProgress()">Guardar medición</button>
   </div>
   <div class="card"><b>Historial</b><div id="history"></div></div>
-  <div class="card"><b>☁️ Google Drive</b>
-<p class="small">Conecta tu Drive para guardar una copia de RESET 12 en la nube. Necesitas configurar un ID de cliente OAuth de Google Cloud.</p>
-<div class="formgrid">
-  <div class="full"><label class="small">Google OAuth Client ID</label><input id="clientId" placeholder="1234567890-xxxx.apps.googleusercontent.com"></div>
-</div>
+  <div class="card"><div class="row"><b>☁️ Google Drive</b><span class="tag" id="syncTag">LOCAL</span></div>
+<p class="small">Tu progreso se guarda en este teléfono y puede sincronizarse con tu Google Drive. RESET 12 actualizará el mismo respaldo para evitar duplicados.</p>
 <div class="two" style="margin-top:10px">
-  <button class="btn secondary" onclick="connectDrive()">Conectar</button>
-  <button class="btn" onclick="backupDrive()">☁️ Guardar en Drive</button>
+  <button class="btn secondary" onclick="connectDrive()">☁️ Conectar Drive</button>
+  <button class="btn" onclick="backupDrive()">Guardar ahora</button>
 </div>
 <div id="driveStatus" class="small" style="margin-top:8px"></div>
 </div>
@@ -131,8 +150,11 @@ input,textarea,select{width:100%;padding:11px 12px;border:1px solid #d1d5db;bord
 
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
-const KEY='reset12_v5';
-const startKey='reset12_start';
+const BASE_KEY='reset12_v5';
+const CLIENT_ID='800988810295-el6fi6505u0djs46um3i681qhdlu8pf2.apps.googleusercontent.com';
+let currentUser=null;
+let KEY=BASE_KEY;
+let startKey='reset12_start';
 const checklist=[
  ['water','Tomé suficiente agua'],['protein','Cumplí mi proteína del día'],['meals','Respeté mis 3 comidas'],['steps','Cumplí mis pasos'],['training','Entrené / hice actividad'],['sleep','Dormí lo planificado'],['discipline','Evité picoteos innecesarios'],['mind','Hice algo positivo por mí']
 ];
@@ -143,10 +165,33 @@ const exercises=[
  ['Día 4 · Tren superior','Press inclinado','Remo sentado','Elevaciones laterales','Jalón','Bíceps','Tríceps'],
  ['Día 5 · Tren inferior','Sentadilla/prensa','Peso muerto rumano','Extensión','Curl femoral','Gemelos','Caminata 10–20 min']
 ];
-let data=JSON.parse(localStorage.getItem(KEY)||'{"days":{},"measurements":[],"xp":0}');
+let data={days:{},measurements:[],xp:0};
+function userKey(email,suffix){return suffix+'_'+encodeURIComponent(email.toLowerCase())}
+function loadUserData(email){
+  const scopedKey=userKey(email,BASE_KEY), scopedStart=userKey(email,'reset12_start');
+  if(!localStorage.getItem(scopedKey)){
+    const legacy=localStorage.getItem(BASE_KEY);
+    if(legacy)localStorage.setItem(scopedKey,legacy);
+    const legacyStart=localStorage.getItem('reset12_start');
+    if(legacyStart)localStorage.setItem(scopedStart,legacyStart);
+  }
+  KEY=scopedKey; startKey=scopedStart;
+  try{data=JSON.parse(localStorage.getItem(KEY)||'{"days":{},"measurements":[],"xp":0}')}
+  catch{data={days:{},measurements:[],xp:0}}
+}
+
 function today(){return new Date().toISOString().slice(0,10)}
 function getDay(){data.days[today()] ||= {checks:{},steps:'',water:'',sleep:'',calories:'',note:'',exercises:{}};return data.days[today()]}
-function save(){localStorage.setItem(KEY,JSON.stringify(data))}
+let syncTimer=null;
+function save(){
+  localStorage.setItem(KEY,JSON.stringify(data));
+  scheduleAutoBackup();
+}
+function scheduleAutoBackup(){
+  if(!driveToken)return;
+  clearTimeout(syncTimer);
+  syncTimer=setTimeout(()=>backupDrive(true),1800);
+}
 function toast(t){let e=document.getElementById('toast');e.textContent=t;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),1600)}
 function show(id){
  document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');
@@ -182,79 +227,161 @@ function streak(){let s=0,d=new Date();for(let i=0;i<84;i++){let k=d.toISOString
 function exportData(){let blob=new Blob([JSON.stringify({data,start:localStorage.getItem(startKey)},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='RESET12-backup-'+today()+'.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let o=JSON.parse(r.result);data=o.data;localStorage.setItem(startKey,o.start||today());save();render();toast('Backup importado')}catch{toast('Archivo no válido')}};r.readAsText(f)}
 function resetAll(){if(confirm('¿Borrar todos tus datos de RESET 12? Esta acción no se puede deshacer.')){localStorage.removeItem(KEY);localStorage.removeItem(startKey);location.reload()}}
-if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
-
 let driveToken=null;
-let driveClientReady=false;
+let driveFolderId=null;
+let driveBackupFileId=null;
 const DRIVE_SCOPE='https://www.googleapis.com/auth/drive.file';
-function getClientId(){return document.getElementById('clientId')?.value?.trim() || localStorage.getItem('reset12_client_id') || ''}
+
 function driveMsg(t){const e=document.getElementById('driveStatus');if(e)e.textContent=t}
+function setSyncTag(t){const e=document.getElementById('syncTag');if(e)e.textContent=t}
+
 function connectDrive(){
-  const id=getClientId();
-  if(!id){driveMsg('Pega primero tu Client ID de Google Cloud.');toast('Falta Client ID');return}
-  localStorage.setItem('reset12_client_id',id);
-  if(!window.google?.accounts?.oauth2){driveMsg('Google todavía está cargando. Intenta de nuevo en unos segundos.');return}
+  if(!currentUser){toast('Primero inicia sesión con Google');return}
+  if(!window.google?.accounts?.oauth2){driveMsg('Google todavía está cargando. Intenta de nuevo.');return}
   window._driveTokenClient=google.accounts.oauth2.initTokenClient({
-    client_id:id, scope:DRIVE_SCOPE,
-    callback:(resp)=>{
-      if(resp.error){driveMsg('No se pudo autorizar Drive.');return}
-      driveToken=resp.access_token; localStorage.setItem('reset12_drive_connected','1');
-      driveMsg('🟢 Drive conectado.'); toast('Drive conectado');
+    client_id:CLIENT_ID,scope:DRIVE_SCOPE,
+    callback:async(resp)=>{
+      if(resp.error){driveMsg('No se pudo autorizar Drive.');setSyncTag('LOCAL');return}
+      driveToken=resp.access_token;
+      localStorage.setItem(userKey(currentUser.email,'reset12_drive_connected'),'1');
+      driveMsg('🟢 Drive conectado. Sincronización automática activa.');
+      setSyncTag('CLOUD');
+      toast('Drive conectado');
+      await backupDrive(true);
     }
   });
   window._driveTokenClient.requestAccessToken({prompt:''});
 }
-async function driveFetch(url, options={}){
-  if(!driveToken) throw new Error('NO_TOKEN');
-  options.headers=Object.assign({},options.headers||{}, {'Authorization':'Bearer '+driveToken});
+
+async function driveFetch(url,options={}){
+  if(!driveToken)throw new Error('NO_TOKEN');
+  options.headers=Object.assign({},options.headers||{},{'Authorization':'Bearer '+driveToken});
   const r=await fetch(url,options);
-  if(!r.ok) throw new Error(await r.text());
+  if(r.status===401){driveToken=null;setSyncTag('LOCAL');throw new Error('AUTH_EXPIRED')}
+  if(!r.ok)throw new Error(await r.text());
   return r;
 }
+
 async function findResetFolder(){
+  if(driveFolderId)return driveFolderId;
   const q=encodeURIComponent("name='RESET 12' and mimeType='application/vnd.google-apps.folder' and trashed=false");
   const r=await driveFetch('https://www.googleapis.com/drive/v3/files?q='+q+'&spaces=drive&fields=files(id,name)');
   const j=await r.json();
-  if(j.files?.length)return j.files[0].id;
+  if(j.files?.length){driveFolderId=j.files[0].id;return driveFolderId}
   const body={name:'RESET 12',mimeType:'application/vnd.google-apps.folder'};
-  const c=await driveFetch('https://www.googleapis.com/drive/v3/files?fields=id,name',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-  return (await c.json()).id;
+  const c=await driveFetch('https://www.googleapis.com/drive/v3/files?fields=id,name',{
+    method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)
+  });
+  driveFolderId=(await c.json()).id;
+  return driveFolderId;
 }
-async function backupDrive(){
+
+async function findResetBackup(folder){
+  if(driveBackupFileId)return driveBackupFileId;
+  const q=encodeURIComponent("name='RESET12-backup.json' and '"+folder+"' in parents and trashed=false");
+  const r=await driveFetch('https://www.googleapis.com/drive/v3/files?q='+q+'&spaces=drive&fields=files(id,name,modifiedTime)');
+  const j=await r.json();
+  if(j.files?.length)driveBackupFileId=j.files[0].id;
+  return driveBackupFileId;
+}
+
+async function backupDrive(silent=false){
   try{
-    if(!driveToken){connectDrive(); return}
-    driveMsg('Guardando respaldo…');
+    if(!currentUser){if(!silent)toast('Primero inicia sesión con Google');return}
+    if(!driveToken){if(!silent)connectDrive();return}
+    if(!silent)driveMsg('Guardando respaldo…');
     const folder=await findResetFolder();
-    const payload=JSON.stringify({version:'RESET12-V6',savedAt:new Date().toISOString(),data,start:localStorage.getItem(startKey)},null,2);
-    const meta={name:'RESET12-backup.json',mimeType:'application/json',parents:[folder]};
-    const boundary='reset12_'+Date.now();
-    const body=new Blob([
-      '--'+boundary+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n',
-      JSON.stringify(meta),'\r\n--'+boundary+'\r\nContent-Type: application/json\r\n\r\n',
-      payload,'\r\n--'+boundary+'--'
-    ]);
-    const r=await driveFetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,modifiedTime',{
-      method:'POST',
-      headers:{'Content-Type':'multipart/related; boundary='+boundary},
-      body
-    });
-    const j=await r.json();
-    localStorage.setItem('reset12_last_drive_backup',new Date().toISOString());
+    const payload=JSON.stringify({
+      version:'RESET12-V7',
+      savedAt:new Date().toISOString(),
+      user:{email:currentUser.email,name:currentUser.name},
+      data:data,
+      start:localStorage.getItem(startKey)
+    },null,2);
+    const existing=await findResetBackup(folder);
+    let r;
+    if(existing){
+      r=await driveFetch('https://www.googleapis.com/upload/drive/v3/files/'+existing+'?uploadType=media&fields=id,name,modifiedTime',{
+        method:'PATCH',headers:{'Content-Type':'application/json'},body:payload
+      });
+    }else{
+      const meta={name:'RESET12-backup.json',mimeType:'application/json',parents:[folder]};
+      const boundary='reset12_'+Date.now();
+      const body=new Blob([
+        '--'+boundary+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n',
+        JSON.stringify(meta),'\r\n--'+boundary+'\r\nContent-Type: application/json\r\n\r\n',
+        payload,'\r\n--'+boundary+'--'
+      ]);
+      r=await driveFetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,modifiedTime',{
+        method:'POST',headers:{'Content-Type':'multipart/related; boundary='+boundary},body:body
+      });
+      driveBackupFileId=(await r.json()).id;
+    }
+    localStorage.setItem(userKey(currentUser.email,'reset12_last_drive_backup'),new Date().toISOString());
     driveMsg('🟢 Último respaldo: '+new Date().toLocaleString('es-CO'));
-    toast('☁️ Respaldo guardado');
+    setSyncTag('CLOUD');
+    if(!silent)toast('☁️ Respaldo guardado');
   }catch(e){
     console.error(e);
-    driveMsg('No se pudo guardar. Revisa la autorización y el Client ID.');
-    toast('Error con Drive');
+    if(e.message==='AUTH_EXPIRED')driveMsg('Sesión de Drive vencida. Pulsa Conectar Drive.');
+    else driveMsg('No se pudo guardar en Drive. Revisa la autorización.');
+    if(!silent)toast('Error con Drive');
   }
 }
+
+function decodeJwtPayload(token){
+  try{
+    const p=token.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');
+    return JSON.parse(decodeURIComponent(atob(p).split('').map(c=>'%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)).join('')));
+  }catch{return null}
+}
+function showAccount(){
+  const chip=document.getElementById('accountChip');
+  if(chip&&currentUser){chip.textContent='👤 '+(currentUser.name||currentUser.email);chip.style.display='block'}
+}
+function finishLogin(profile){
+  currentUser={email:profile.email||'',name:profile.name||'Usuario',picture:profile.picture||''};
+  if(!currentUser.email){toast('No se pudo identificar tu cuenta');return}
+  localStorage.setItem('reset12_user',JSON.stringify(currentUser));
+  loadUserData(currentUser.email);
+  document.getElementById('loginOverlay').style.display='none';
+  showAccount();
+  const connected=localStorage.getItem(userKey(currentUser.email,'reset12_drive_connected'))==='1';
+  if(connected){
+    setSyncTag('CLOUD');
+    driveMsg('Conectando Drive…');
+    setTimeout(()=>connectDrive(),700);
+  }
+  render();
+}
+function initGoogleLogin(){
+  if(!window.google?.accounts?.id){setTimeout(initGoogleLogin,350);return}
+  google.accounts.id.initialize({
+    client_id:CLIENT_ID,
+    callback:(response)=>{
+      const p=decodeJwtPayload(response.credential);
+      if(!p){toast('No se pudo iniciar sesión');return}
+      finishLogin({email:p.email,name:p.name,picture:p.picture});
+    },
+    auto_select:false,
+    cancel_on_tap_outside:true
+  });
+  google.accounts.id.renderButton(document.getElementById('googleSignInButton'),{
+    theme:'outline',size:'large',type:'standard',text:'signin_with',shape:'pill',logo_alignment:'left',width:280
+  });
+}
+function boot(){
+  const saved=localStorage.getItem('reset12_user');
+  if(saved){
+    try{finishLogin(JSON.parse(saved));return}catch{}
+  }
+  document.getElementById('loginOverlay').style.display='flex';
+  initGoogleLogin();
+}
 window.addEventListener('load',()=>{
-  const c=document.getElementById('clientId');
-  if(c)c.value=localStorage.getItem('reset12_client_id')||'';
-  const last=localStorage.getItem('reset12_last_drive_backup');
-  if(last)driveMsg('Último respaldo: '+new Date(last).toLocaleString('es-CO'));
+  if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js');
+  boot();
 });
 
-render();
 </script>
 </body></html>
