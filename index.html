@@ -26,7 +26,7 @@ button,.btn{border:0;border-radius:12px;padding:11px 13px;font-weight:800;backgr
 input,textarea,select{width:100%;padding:11px 12px;border:1px solid #d1d5db;border-radius:12px;background:#fff;color:var(--ink);font:inherit}textarea{min-height:95px;resize:vertical}
 .formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}
 .tag{font-size:11px;font-weight:800;border-radius:999px;padding:5px 8px;background:#f3f4f6;color:#374151}
-.nav{position:fixed;bottom:0;left:0;right:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:8px max(8px,env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom));max-width:720px;margin:auto}
+.agenda-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.agenda-item{border:1px solid var(--line);border-radius:14px;padding:11px;background:#fafafa}.agenda-time{font-size:12px;font-weight:900}.agenda-title{font-weight:800;margin-top:3px}.menu-box{border:1px solid var(--line);border-radius:14px;padding:12px;margin:9px 0}.menu-day{font-size:12px;color:var(--muted);font-weight:800}.menu-title{font-weight:900;margin:3px 0 5px}.pill-row{display:flex;gap:7px;flex-wrap:wrap}.pill{padding:7px 9px;border:1px solid var(--line);border-radius:999px;background:#f9fafb;font-size:11px;font-weight:800}.nav{position:fixed;bottom:0;left:0;right:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(6,1fr);padding:8px max(8px,env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom));max-width:720px;margin:auto}
 .nav button{background:transparent;color:#6b7280;padding:8px 3px;font-size:11px}.nav button.active{color:#111827;font-weight:900}.ico{display:block;font-size:19px;margin-bottom:2px}
 .exercise{border:1px solid var(--line);border-radius:14px;padding:12px;margin:9px 0}.exercise .name{font-weight:900}.two{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
 .toast{position:fixed;left:50%;bottom:82px;transform:translateX(-50%);background:#111827;color:white;padding:10px 14px;border-radius:999px;font-size:12px;display:none;z-index:30}.toast.show{display:block}
@@ -61,7 +61,7 @@ input,textarea,select{width:100%;padding:11px 12px;border:1px solid #d1d5db;bord
     <p class="login-sub">Tu transformación empieza hoy.<br>Inicia sesión para acceder a tu progreso personal.</p>
     <div class="card" style="margin:0 0 14px;background:#f9fafb">
       <b>🔐 Acceso con Google</b>
-      <p class="small" style="margin-bottom:0">Usaremos tu cuenta de Google para identificar tu perfil. Tu progreso seguirá guardándose localmente y podrás sincronizarlo con Drive.</p>
+      <p class="small" style="margin-bottom:0">Usaremos tu cuenta de Google para identificar tu perfil. Tu progreso seguirá guardándose localmente y podrás sincronizarlo con Drive. Google Calendar se conecta solo cuando tú lo autorices.</p>
     </div>
     <div class="google-wrap"><div id="googleSignInButton"></div></div>
     <p class="login-note">No compartas contraseñas con RESET 12. La autenticación se realiza mediante Google.</p>
@@ -99,12 +99,13 @@ input,textarea,select{width:100%;padding:11px 12px;border:1px solid #d1d5db;bord
     <div class="stat"><div class="num" id="waistHome">—</div><div class="label">cintura</div></div>
   </div>
   <div class="card"><div class="row"><b>Mensaje del día</b><span class="tag">RESET 12</span></div><p id="quote">No necesitas hacerlo perfecto. Necesitas hacerlo hoy.</p></div>
-  <button style="width:100%;margin-top:4px" onclick="show('check')">✓ HACER MI CHECKLIST</button>
+  <button style="width:100%;margin-top:4px" onclick="show('check')">✓ HACER MI CHECKLIST</button><button class="btn secondary" style="width:100%;margin-top:8px" onclick="show('agenda')">📅 VER MI AGENDA</button>
 </section>
 
 <section id="check" class="screen">
   <h1>Checklist</h1><p class="lead">Marca lo que sí hiciste. Sin drama si algo queda pendiente.</p>
   <div class="card" id="checks"></div>
+  <div class="card"><div class="row"><b>➕ Mis hábitos</b><span class="tag">Personalizable</span></div><p class="small">Agrega acciones que quieras convertir en parte del RESET.</p><div class="two"><input id="newHabit" placeholder="Ej. 10 min de lectura"><button class="btn" onclick="addHabit()">Agregar</button></div><div id="customHabits" style="margin-top:8px"></div></div>
   <div class="card">
     <b>Datos rápidos</b>
     <div class="formgrid" style="margin-top:10px">
@@ -119,25 +120,28 @@ input,textarea,select{width:100%;padding:11px 12px;border:1px solid #d1d5db;bord
 </section>
 
 <section id="food" class="screen">
-  <h1>Nutrición</h1><p class="lead">3 comidas. Proteína en cada una. Sencillo y repetible.</p>
-  <div class="card"><b>Objetivo diario</b><div class="grid" style="margin-top:10px">
-    <div class="stat"><div class="num">≈ 2.000</div><div class="label">kcal iniciales</div></div>
-    <div class="stat"><div class="num">150–170 g</div><div class="label">proteína</div></div>
-  </div></div>
-  <div class="card"><b>Plantilla de comidas</b>
-    <div class="check"><span><b>🍳 Desayuno</b><br><span class="small">Huevos + proteína + fruta + vegetales / carbohidrato según el día.</span></span></div>
-    <div class="check"><span><b>🍗 Almuerzo</b><br><span class="small">Pollo/carne magra + abundantes vegetales + porción medida de arroz/papa.</span></span></div>
-    <div class="check"><span><b>🥩 Cena</b><br><span class="small">Proteína + vegetales; ajustar carbohidrato según entrenamiento y hambre.</span></span></div>
-  </div>
-  <div class="card"><b>Reglas RESET</b>
-    <p class="small">Prioriza agua, alimentos poco procesados y porciones consistentes. No hace falta eliminar grupos de alimentos ni pasar hambre.</p>
-  </div>
+  <h1>Nutrición</h1><p class="lead">Menús rotativos, cantidades claras y opciones sencillas. Sin pescado.</p>
+  <div class="card"><b>Objetivo inicial</b><div class="grid" style="margin-top:10px">
+    <div class="stat"><div class="num">≈ 2.000</div><div class="label">kcal orientativas</div></div>
+    <div class="stat"><div class="num">150–170 g</div><div class="label">proteína/día</div></div>
+  </div><p class="small" style="margin-bottom:0">Es un punto de partida, no una prescripción médica. Ajusta según evolución y acompañamiento profesional.</p></div>
+  <div class="card"><div class="row"><b>Menú de hoy</b><span class="tag" id="menuDayTag">Día 1</span></div><div id="todayMenu"></div></div>
+  <div class="card"><b>Rotación de 7 días</b><div id="weekMenus"></div></div>
+  <div class="card"><div class="row"><b>🛒 Lista de compras</b><button class="btn secondary" onclick="generateShoppingList()">Generar</button></div><div id="shoppingList" class="small" style="margin-top:10px">Genera una lista según los menús de la semana.</div></div>
 </section>
 
 <section id="gym" class="screen">
   <h1>Entrenamiento</h1><p class="lead">Vuelve progresivamente. La primera meta es recuperar el hábito.</p>
   <div class="card"><b>Semana actual</b><p class="small">Objetivo: fuerza 4 días la primera semana y subir gradualmente. Si hay dolor inusual, detente y consulta.</p></div>
   <div id="exercises"></div>
+</section>
+
+<section id="agenda" class="screen">
+  <h1>Mi agenda</h1><p class="lead">Organiza comida, entrenamiento, descanso y mediciones. Puedes llevarlo a Google Calendar.</p>
+  <div class="card"><div class="row"><b>Google Calendar</b><span class="tag" id="calendarTag">LOCAL</span></div><p class="small">RESET 12 solo accederá a Calendar cuando pulses conectar. Podrá consultar y crear eventos en tus calendarios autorizados.</p><div class="two"><button class="btn secondary" onclick="connectCalendar()">📅 Conectar</button><button class="btn" onclick="syncCalendarWeek()">☁️ Sincronizar semana</button></div><div id="calendarStatus" class="small" style="margin-top:8px"></div></div>
+  <div class="card"><div class="row"><b>Agenda de hoy</b><span class="tag">RESET 12</span></div><div id="todayAgenda" class="agenda-grid" style="margin-top:10px"></div></div>
+  <div class="card"><b>Próximos eventos de Google Calendar</b><div id="calendarEvents" class="small" style="margin-top:10px"><div class="empty">Conecta Calendar para ver tus próximos eventos.</div></div></div>
+  <div class="card"><b>Horarios personalizables</b><div class="formgrid" style="margin-top:10px"><div><label class="small">Desayuno</label><input id="timeBreakfast" type="time" value="07:00"></div><div><label class="small">Almuerzo</label><input id="timeLunch" type="time" value="13:00"></div><div><label class="small">Entrenamiento</label><input id="timeGym" type="time" value="19:00"></div><div><label class="small">Cena</label><input id="timeDinner" type="time" value="21:15"></div><div><label class="small">Dormir</label><input id="timeSleep" type="time" value="23:00"></div><div><label class="small">Medición semanal</label><input id="timeMeasure" type="time" value="06:00"></div></div><button class="btn secondary" style="width:100%;margin-top:10px" onclick="saveAgendaSettings()">Guardar horarios</button></div>
 </section>
 
 <section id="progress" class="screen">
@@ -149,7 +153,7 @@ input,textarea,select{width:100%;padding:11px 12px;border:1px solid #d1d5db;bord
     </div>
     <button style="width:100%;margin-top:10px" onclick="saveProgress()">Guardar medición</button>
   </div>
-  <div class="card"><b>Historial</b><div id="history"></div></div>
+  <div class="card"><b>Tendencia</b><div id="trend" style="margin-top:10px"></div></div><div class="card"><b>Historial</b><div id="history"></div></div>
   <div class="card"><div class="row"><b>☁️ Google Drive</b><span class="tag" id="syncTag">LOCAL</span></div>
 <p class="small">Tu progreso se guarda en este teléfono y puede sincronizarse con tu Google Drive. RESET 12 actualizará el mismo respaldo para evitar duplicados.</p>
 <div class="two" style="margin-top:10px">
@@ -170,6 +174,7 @@ input,textarea,select{width:100%;padding:11px 12px;border:1px solid #d1d5db;bord
  <button data-tab="check" onclick="show('check')"><span class="ico">✓</span>Hoy</button>
  <button data-tab="food" onclick="show('food')"><span class="ico">🍽</span>Comida</button>
  <button data-tab="gym" onclick="show('gym')"><span class="ico">🏋</span>Gym</button>
+ <button data-tab="agenda" onclick="show('agenda')"><span class="ico">📅</span>Agenda</button>
  <button data-tab="progress" onclick="show('progress')"><span class="ico">↗</span>Progreso</button>
 </nav>
 <div id="toast" class="toast"></div>
@@ -191,7 +196,7 @@ const exercises=[
  ['Día 4 · Tren superior','Press inclinado','Remo sentado','Elevaciones laterales','Jalón','Bíceps','Tríceps'],
  ['Día 5 · Tren inferior','Sentadilla/prensa','Peso muerto rumano','Extensión','Curl femoral','Gemelos','Caminata 10–20 min']
 ];
-let data={days:{},measurements:[],xp:0};
+let data={days:{},measurements:[],xp:0,customHabits:[],agenda:{breakfast:'07:00',lunch:'13:00',gym:'19:00',dinner:'21:15',sleep:'23:00',measure:'06:00'},shoppingList:[]};
 function userKey(email,suffix){return suffix+'_'+encodeURIComponent(email.toLowerCase())}
 function loadUserData(email){
   const scopedKey=userKey(email,BASE_KEY), scopedStart=userKey(email,'reset12_start');
@@ -202,8 +207,9 @@ function loadUserData(email){
     if(legacyStart)localStorage.setItem(scopedStart,legacyStart);
   }
   KEY=scopedKey; startKey=scopedStart;
-  try{data=JSON.parse(localStorage.getItem(KEY)||'{"days":{},"measurements":[],"xp":0}')}
-  catch{data={days:{},measurements:[],xp:0}}
+  try{data=JSON.parse(localStorage.getItem(KEY)||'{"days":{},"measurements":[],"xp":0}');data.customHabits ||= [];data.agenda ||= {breakfast:'07:00',lunch:'13:00',gym:'19:00',dinner:'21:15',sleep:'23:00',measure:'06:00'};data.shoppingList ||= []}
+  catch{data={days:{},measurements:[],xp:0,customHabits:[],agenda:{breakfast:'07:00',lunch:'13:00',gym:'19:00',dinner:'21:15',sleep:'23:00',measure:'06:00'},shoppingList:[]}}
+  data.customHabits ||= []; data.agenda ||= {breakfast:'07:00',lunch:'13:00',gym:'19:00',dinner:'21:15',sleep:'23:00',measure:'06:00'}; data.shoppingList ||= []
 }
 
 function today(){return new Date().toISOString().slice(0,10)}
@@ -233,10 +239,10 @@ function render(){
  document.getElementById('streak').textContent=streak();
  const last=data.measurements.at(-1);document.getElementById('weightHome').textContent=last?last.weight+' kg':'—';document.getElementById('waistHome').textContent=last?last.waist+' cm':'—';
  document.getElementById('xpPill').textContent=data.xp+' XP · Nivel '+(Math.floor(data.xp/500)+1);
- document.getElementById('checks').innerHTML=checklist.map(([k,t])=>`<label class="check"><input type="checkbox" ${d.checks[k]?'checked':''} onchange="toggleCheck('${k}',this.checked)"><span class="${d.checks[k]?'done':''}">${t}</span></label>`).join('');
+ const baseChecks=checklist.map(([k,t])=>`<label class="check"><input type="checkbox" ${d.checks[k]?'checked':''} onchange="toggleCheck('${k}',this.checked)"><span class="${d.checks[k]?'done':''}">${t}</span></label>`).join(''); document.getElementById('checks').innerHTML=baseChecks; document.getElementById('customHabits').innerHTML=(data.customHabits||[]).map((h,i)=>`<div class="check"><input type="checkbox" ${d.checks['custom_'+i]?'checked':''} onchange="toggleCheck('custom_${i}',this.checked)"><span class="${d.checks['custom_'+i]?'done':''}">${h}</span><button class="btn danger" style="padding:6px 8px" onclick="removeHabit(${i})">×</button></div>`).join('');
  ['steps','water','sleep','calories','note'].forEach(k=>document.getElementById(k).value=d[k]||'');
  document.getElementById('weight').value=last?.weight||'';document.getElementById('waist').value=last?.waist||'';
- renderExercises();renderHistory();
+ renderExercises();renderHistory();renderTrend();renderMenus();renderAgenda();renderCalendarEvents();
 }
 function toggleCheck(k,v){let d=getDay();if(d.checks[k]===v)return;d.checks[k]=v;data.xp+=v?25:-25;if(data.xp<0)data.xp=0;save();render();toast(v?'✓ Hecho · +25 XP':'Marcado como pendiente')}
 function saveDay(){let d=getDay();['steps','water','sleep','calories','note'].forEach(k=>d[k]=document.getElementById(k).value);save();toast('Día guardado');render()}
@@ -247,12 +253,40 @@ function renderExercises(){
 }
 function ex(k,f,v){getDay().exercises[k]||={};getDay().exercises[k][f]=v;save()}
 function saveProgress(){let w=parseFloat(document.getElementById('weight').value),wa=parseFloat(document.getElementById('waist').value);if(!w||!wa){toast('Completa peso y cintura');return}data.measurements.push({date:today(),weight:w,waist:wa});save();toast('Medición guardada');render()}
+function renderTrend(){const e=document.getElementById('trend');if(!e)return;if(data.measurements.length<2){e.innerHTML='<div class="empty">Registra al menos 2 mediciones para ver tendencia.</div>';return}const a=data.measurements.slice(-6);const first=a[0],last=a[a.length-1],dw=(last.weight-first.weight).toFixed(1),dc=(last.waist-first.waist).toFixed(1);e.innerHTML=`<div class="grid"><div class="stat"><div class="num">${dw>0?'+':''}${dw} kg</div><div class="label">cambio de peso</div></div><div class="stat"><div class="num">${dc>0?'+':''}${dc} cm</div><div class="label">cambio de cintura</div></div></div><div class="small" style="margin-top:10px">${a.map(x=>`${x.date}: ${x.weight} kg · ${x.waist} cm`).join('<br>')}</div>`}
 function renderHistory(){let h=document.getElementById('history');if(!data.measurements.length){h.innerHTML='<div class="empty">Aún no hay mediciones.</div>';return}h.innerHTML=data.measurements.slice().reverse().map(x=>`<div class="check"><span><b>${x.date}</b><br><span class="small">${x.weight} kg · ${x.waist} cm cintura</span></span></div>`).join('')}
 function dayIndex(){if(!localStorage.getItem(startKey))localStorage.setItem(startKey,today());let a=new Date(localStorage.getItem(startKey)),b=new Date(today());return Math.min(84,Math.max(1,Math.floor((b-a)/86400000)+1))}
 function streak(){let s=0,d=new Date();for(let i=0;i<84;i++){let k=d.toISOString().slice(0,10),x=data.days[k];if(!x)break;let n=checklist.filter(q=>x.checks?.[q[0]]).length;if(n<5)break;s++;d.setDate(d.getDate()-1)}return s}
 function exportData(){let blob=new Blob([JSON.stringify({data,start:localStorage.getItem(startKey)},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='RESET12-backup-'+today()+'.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let o=JSON.parse(r.result);data=o.data;localStorage.setItem(startKey,o.start||today());save();render();toast('Backup importado')}catch{toast('Archivo no válido')}};r.readAsText(f)}
 function resetAll(){if(confirm('¿Borrar todos tus datos de RESET 12? Esta acción no se puede deshacer.')){localStorage.removeItem(KEY);localStorage.removeItem(startKey);location.reload()}}
+
+const MENUS=[
+ {title:'Día 1 · Pollo & arroz',items:['Desayuno: 3 huevos + 2 claras + arepa pequeña + fruta','Almuerzo: 180 g pollo + 150 g arroz cocido + ensalada + 1 cdita aceite','Cena: 180 g carne magra + papa mediana + verduras']},
+ {title:'Día 2 · Carne & papa',items:['Desayuno: 2 huevos + 120 g claras + avena + banano pequeño','Almuerzo: 180 g carne magra + 250 g papa + ensalada','Cena: 180 g pollo + 120 g arroz cocido + verduras']},
+ {title:'Día 3 · Pollo & pasta',items:['Desayuno: tortilla de 3 huevos + queso bajo en grasa + fruta','Almuerzo: 180 g pollo + 140 g pasta cocida + verduras','Cena: 180 g carne magra + 200 g papa + ensalada']},
+ {title:'Día 4 · Arroz & huevos',items:['Desayuno: 3 huevos + 2 claras + arepa + fruta','Almuerzo: 180 g carne magra + 150 g arroz + ensalada','Cena: 180 g pollo + 200 g papa + verduras']},
+ {title:'Día 5 · Pollo & arepa',items:['Desayuno: 3 huevos + queso + arepa pequeña + fruta','Almuerzo: 180 g pollo + 150 g arroz + ensalada','Cena: 180 g carne magra + papa + verduras']},
+ {title:'Día 6 · Flexible controlado',items:['Desayuno: huevos + avena + fruta','Almuerzo: proteína magra 180 g + carbohidrato 1 porción + verduras','Cena: proteína magra 180 g + verduras + carbohidrato pequeño']},
+ {title:'Día 7 · Recuperación',items:['Desayuno: huevos + arepa + fruta','Almuerzo: pollo 180 g + arroz 150 g + ensalada','Cena: carne magra 180 g + papa + verduras']}
+];
+function renderMenus(){const idx=(dayIndex()-1)%7,m=MENUS[idx];const tm=document.getElementById('todayMenu');if(tm)tm.innerHTML=m.items.map(x=>`<div class="check"><span>${x}</span></div>`).join('');const tag=document.getElementById('menuDayTag');if(tag)tag.textContent='Día '+(idx+1);const wm=document.getElementById('weekMenus');if(wm)wm.innerHTML=MENUS.map((x,i)=>`<div class="menu-box"><div class="menu-day">DÍA ${i+1}</div><div class="menu-title">${x.title}</div><div class="small">${x.items.join(' · ')}</div></div>`).join('')}
+function generateShoppingList(){const list=['Huevos','Pollo','Carne magra','Arroz','Papa','Avena','Arepas','Pasta','Frutas','Verduras variadas','Queso bajo en grasa','Aceite de oliva'];data.shoppingList=list;save();const e=document.getElementById('shoppingList');if(e)e.innerHTML='<div class="pill-row">'+list.map(x=>`<span class="pill">${x}</span>`).join('')+'</div>';toast('Lista de compras generada')}
+function addHabit(){const e=document.getElementById('newHabit'),v=(e.value||'').trim();if(!v)return;data.customHabits.push(v);e.value='';save();render();toast('Hábito agregado · +25 XP al cumplirlo')}
+function removeHabit(i){if(confirm('¿Eliminar este hábito?')){data.customHabits.splice(i,1);save();render()}}
+function saveAgendaSettings(){data.agenda={breakfast:document.getElementById('timeBreakfast').value,lunch:document.getElementById('timeLunch').value,gym:document.getElementById('timeGym').value,dinner:document.getElementById('timeDinner').value,sleep:document.getElementById('timeSleep').value,measure:document.getElementById('timeMeasure').value};save();renderAgenda();toast('Horarios guardados')}
+function renderAgenda(){const a=data.agenda||{},vals={timeBreakfast:a.breakfast||'07:00',timeLunch:a.lunch||'13:00',timeGym:a.gym||'19:00',timeDinner:a.dinner||'21:15',timeSleep:a.sleep||'23:00',timeMeasure:a.measure||'06:00'};Object.entries(vals).forEach(([id,v])=>{const e=document.getElementById(id);if(e)e.value=v});const e=document.getElementById('todayAgenda');if(!e)return;const items=[['🍳',a.breakfast||'07:00','Desayuno'],['🍛',a.lunch||'13:00','Almuerzo'],['🏋️',a.gym||'19:00','Entrenamiento'],['🥗',a.dinner||'21:15','Cena'],['😴',a.sleep||'23:00','Dormir'],['📏',a.measure||'06:00','Medición semanal']];e.innerHTML=items.map(x=>`<div class="agenda-item"><div class="agenda-time">${x[0]} ${x[1]}</div><div class="agenda-title">${x[2]}</div></div>`).join('')}
+let calendarToken=null;const CALENDAR_SCOPE='https://www.googleapis.com/auth/calendar.events';
+function calendarMsg(t){const e=document.getElementById('calendarStatus');if(e)e.textContent=t} function setCalendarTag(t){const e=document.getElementById('calendarTag');if(e)e.textContent=t}
+function connectCalendar(){if(!currentUser){toast('Primero inicia sesión con Google');return}if(!window.google?.accounts?.oauth2){calendarMsg('Google todavía está cargando.');return}window._calendarTokenClient=google.accounts.oauth2.initTokenClient({client_id:CLIENT_ID,scope:CALENDAR_SCOPE,callback:async(resp)=>{if(resp.error){calendarMsg('No se pudo autorizar Calendar.');setCalendarTag('LOCAL');return}calendarToken=resp.access_token;localStorage.setItem(userKey(currentUser.email,'reset12_calendar_connected'),'1');setCalendarTag('CLOUD');calendarMsg('🟢 Google Calendar conectado.');toast('Calendar conectado');await renderCalendarEvents()}});window._calendarTokenClient.requestAccessToken({prompt:''})}
+async function calendarFetch(url,options={}){if(!calendarToken)throw new Error('NO_CAL_TOKEN');options.headers=Object.assign({},options.headers||{},{Authorization:'Bearer '+calendarToken,'Content-Type':'application/json'});const r=await fetch(url,options);if(r.status===401){calendarToken=null;setCalendarTag('LOCAL');throw new Error('CAL_AUTH_EXPIRED')}if(!r.ok)throw new Error(await r.text());return r}
+function isoFor(date,time){const [h,m]=(time||'07:00').split(':').map(Number);const d=new Date(date);d.setHours(h,m,0,0);return d.toISOString()}
+function eventId(date,type){return ('reset12_'+date+'_'+type).replace(/[^a-z0-9_]/g,'').toLowerCase()}
+function calendarEvent(date,type,time,title,duration){const start=isoFor(date,time),end=new Date(new Date(start).getTime()+duration*60000).toISOString();return {id:eventId(date,type),summary:'RESET 12 · '+title,description:'Evento creado por RESET 12 · 84 días · constancia sobre perfección.',start:{dateTime:start,timeZone:'America/Bogota'},end:{dateTime:end,timeZone:'America/Bogota'},reminders:{useDefault:true}}}
+async function insertCalendarEvent(ev){try{await calendarFetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?sendUpdates=none',{method:'POST',body:JSON.stringify(ev)});return true}catch(e){if(String(e.message).includes('409'))return true;throw e}}
+async function syncCalendarWeek(){if(!calendarToken){connectCalendar();return}try{calendarMsg('Sincronizando 7 días…');const a=data.agenda||{};const todayD=new Date();const jobs=[['breakfast','desayuno','Desayuno',30],['lunch','almuerzo','Almuerzo',45],['gym','gym','Entrenamiento',120],['dinner','cena','Cena',30],['sleep','sleep','Dormir',480]];for(let i=0;i<7;i++){const d=new Date(todayD);d.setDate(todayD.getDate()+i);const date=d.toISOString().slice(0,10);for(const [key,type,title,dur] of jobs)await insertCalendarEvent(calendarEvent(date,type,a[key],title,dur))}calendarMsg('🟢 Semana sincronizada sin duplicar eventos.');toast('Semana enviada a Calendar');await renderCalendarEvents()}catch(e){console.error(e);calendarMsg('No se pudo sincronizar. Revisa el permiso de Calendar.');toast('Error con Calendar')}}
+async function renderCalendarEvents(){const e=document.getElementById('calendarEvents');if(!e)return;if(!calendarToken){e.innerHTML='<div class="empty">Conecta Calendar para ver tus próximos eventos.</div>';return}try{const now=new Date().toISOString(),r=await calendarFetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin='+encodeURIComponent(now)+'&maxResults=10&singleEvents=true&orderBy=startTime');const j=await r.json();if(!j.items?.length){e.innerHTML='<div class="empty">No hay eventos próximos.</div>';return}e.innerHTML=j.items.map(x=>{const st=x.start?.dateTime||x.start?.date;return `<div class="check"><span><b>${x.summary||'Sin título'}</b><br><span class="small">${new Date(st).toLocaleString('es-CO',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</span></span></div>`}).join('')}catch(err){if(err.message==='CAL_AUTH_EXPIRED')calendarMsg('Sesión de Calendar vencida. Pulsa Conectar.');e.innerHTML='<div class="empty">No fue posible leer Calendar.</div>'}}
+function bootCalendar(){const connected=currentUser&&localStorage.getItem(userKey(currentUser.email,'reset12_calendar_connected'))==='1';if(connected){setCalendarTag('CLOUD');setTimeout(()=>connectCalendar(),900)}}
 let driveToken=null;
 let driveFolderId=null;
 let driveBackupFileId=null;
@@ -398,6 +432,7 @@ function finishLogin(profile){
     setTimeout(()=>connectDrive(),700);
   }
   render();
+  bootCalendar();
 }
 function initGoogleLogin(){
   if(!window.google?.accounts?.id){setTimeout(initGoogleLogin,350);return}
