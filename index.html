@@ -3,44 +3,44 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#111827">
+<meta name="theme-color" content="#0D0D0F">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="RESET 12">
+<meta name="apple-mobile-web-app-title" content="RENOVA">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
-<title>RESET 12 V7 · Tu transformación</title>
+<title>RENOVA · Construye tu mejor versión</title>
 <style>
-:root{--bg:#f4f5f7;--card:#fff;--ink:#111827;--muted:#6b7280;--line:#e5e7eb;--accent:#111827;--ok:#16a34a;--warn:#d97706;--danger:#dc2626}
-*{box-sizing:border-box}html{background:var(--bg)}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);padding-bottom:92px}
-header{position:sticky;top:0;z-index:10;background:rgba(244,245,247,.94);backdrop-filter:blur(14px);padding:14px 16px 10px;border-bottom:1px solid var(--line)}
-.top{display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{font-weight:900;font-size:22px;letter-spacing:-.5px}.sub{font-size:12px;color:var(--muted)}
-.xp{font-size:12px;font-weight:800;background:#fff;border:1px solid var(--line);padding:7px 10px;border-radius:999px}
+:root{--bg:#0D0D0F;--card:#171719;--ink:#F4F4F5;--muted:#A1A1AA;--line:#303036;--accent:#FF6A00;--ok:#22C55E;--warn:#FFC247;--danger:#EF4444;--phoenix:#FF6A00;--phoenix-gold:#FFC247}
+*{box-sizing:border-box}html{background:var(--bg)}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);background:radial-gradient(ellipse at top,#21150f 0%,var(--bg) 48%);padding-bottom:92px}
+header{position:sticky;top:0;z-index:10;background:rgba(13,13,15,.92);backdrop-filter:blur(14px);padding:14px 16px 10px;border-bottom:1px solid var(--line)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{font-weight:950;font-size:24px;letter-spacing:1.5px;color:var(--ink)}.sub{font-size:12px;color:var(--muted)}
+.xp{font-size:12px;font-weight:800;background:#21150f;border:1px solid #5b321b;color:#ffc247;padding:7px 10px;border-radius:999px}
 main{max-width:720px;margin:auto;padding:14px 14px 24px}.screen{display:none}.screen.active{display:block}
 h1{font-size:28px;line-height:1.05;margin:8px 0 4px}.lead{color:var(--muted);margin:0 0 16px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:15px;margin:10px 0;box-shadow:0 2px 8px rgba(17,24,39,.04)}
-.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{padding:13px;border-radius:15px;background:#f9fafb;border:1px solid var(--line)}.num{font-size:24px;font-weight:900}.label{font-size:12px;color:var(--muted)}
-.progress{height:10px;background:#e5e7eb;border-radius:999px;overflow:hidden}.bar{height:100%;background:#111827;width:0;transition:.25s}
-.check{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.check:last-child{border:0}.check input{width:23px;height:23px;accent-color:#111827}.check span{flex:1}.done{text-decoration:line-through;color:var(--muted)}
-button,.btn{border:0;border-radius:12px;padding:11px 13px;font-weight:800;background:#111827;color:white;cursor:pointer}.btn.secondary{background:#f3f4f6;color:#111827;border:1px solid var(--line)}.btn.danger{background:#fee2e2;color:#991b1b}
-input,textarea,select{width:100%;padding:11px 12px;border:1px solid #d1d5db;border-radius:12px;background:#fff;color:var(--ink);font:inherit}textarea{min-height:95px;resize:vertical}
+.card{background:linear-gradient(145deg,#19191c,#141416);border:1px solid var(--line);border-radius:18px;padding:15px;margin:10px 0;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{padding:13px;border-radius:15px;background:#202023;border:1px solid var(--line)}.num{font-size:24px;font-weight:900}.label{font-size:12px;color:var(--muted)}
+.progress{height:10px;background:#303034;border-radius:999px;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,#ff6a00,#ffc247);width:0;transition:.25s}
+.check{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.check:last-child{border:0}.check input{width:23px;height:23px;accent-color:#ff6a00}.check span{flex:1}.done{text-decoration:line-through;color:var(--muted)}
+button,.btn{border:0;border-radius:12px;padding:11px 13px;font-weight:850;background:linear-gradient(100deg,#ff6a00,#ff8c22);color:#111113;cursor:pointer}.btn.secondary{background:#242427;color:#f4f4f5;border:1px solid var(--line)}.btn.danger{background:#3a1717;color:#fecaca;border:1px solid #6b2525}
+input,textarea,select{width:100%;padding:11px 12px;border:1px solid #414146;border-radius:12px;background:#202023;color:var(--ink);font:inherit}textarea{min-height:95px;resize:vertical}
 .formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}
-.tag{font-size:11px;font-weight:800;border-radius:999px;padding:5px 8px;background:#f3f4f6;color:#374151}
-.agenda-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.agenda-item{border:1px solid var(--line);border-radius:14px;padding:11px;background:#fafafa}.agenda-time{font-size:12px;font-weight:900}.agenda-title{font-weight:800;margin-top:3px}.menu-box{border:1px solid var(--line);border-radius:14px;padding:12px;margin:9px 0}.menu-day{font-size:12px;color:var(--muted);font-weight:800}.menu-title{font-weight:900;margin:3px 0 5px}.pill-row{display:flex;gap:7px;flex-wrap:wrap}.pill{padding:7px 9px;border:1px solid var(--line);border-radius:999px;background:#f9fafb;font-size:11px;font-weight:800}.mail-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.mail-note{border-left:3px solid var(--ink);padding-left:10px}.nav{position:fixed;bottom:0;left:0;right:0;z-index:20;background:rgba(255,255,255,.96);backdrop-filter:blur(14px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(7,1fr);padding:8px max(8px,env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom));max-width:720px;margin:auto}
-.nav button{background:transparent;color:#6b7280;padding:8px 3px;font-size:11px}.nav button.active{color:#111827;font-weight:900}.ico{display:block;font-size:19px;margin-bottom:2px}
+.tag{font-size:11px;font-weight:800;border-radius:999px;padding:5px 8px;background:#352114;color:#ffc247}
+.agenda-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.agenda-item{border:1px solid var(--line);border-radius:14px;padding:11px;background:#202023}.agenda-time{font-size:12px;font-weight:900}.agenda-title{font-weight:800;margin-top:3px}.menu-box{border:1px solid var(--line);border-radius:14px;padding:12px;margin:9px 0}.menu-day{font-size:12px;color:var(--muted);font-weight:800}.menu-title{font-weight:900;margin:3px 0 5px}.pill-row{display:flex;gap:7px;flex-wrap:wrap}.pill{padding:7px 9px;border:1px solid var(--line);border-radius:999px;background:#242427;font-size:11px;font-weight:800}.mail-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.mail-note{border-left:3px solid var(--ink);padding-left:10px}.nav{position:fixed;bottom:0;left:0;right:0;z-index:20;background:rgba(18,18,20,.97);backdrop-filter:blur(14px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(7,1fr);padding:8px max(8px,env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom));max-width:720px;margin:auto}
+.nav button{background:transparent;color:#a1a1aa;padding:8px 3px;font-size:11px}.nav button.active{color:#ffc247;font-weight:900}.ico{display:block;font-size:19px;margin-bottom:2px}
 .exercise{border:1px solid var(--line);border-radius:14px;padding:12px;margin:9px 0}.exercise .name{font-weight:900}.two{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
-.toast{position:fixed;left:50%;bottom:82px;transform:translateX(-50%);background:#111827;color:white;padding:10px 14px;border-radius:999px;font-size:12px;display:none;z-index:30}.toast.show{display:block}
+.toast{position:fixed;left:50%;bottom:82px;transform:translateX(-50%);background:#ffc247;color:#111113;padding:10px 14px;border-radius:999px;font-size:12px;display:none;z-index:30}.toast.show{display:block}
 .small{font-size:12px;color:var(--muted)}.center{text-align:center}.empty{padding:24px;text-align:center;color:var(--muted)}
-.account-chip{font-size:11px;font-weight:800;background:#f3f4f6;border:1px solid var(--line);padding:6px 9px;border-radius:999px;margin-top:5px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.login-overlay{position:fixed;inset:0;z-index:100;background:linear-gradient(180deg,#f4f5f7,#fff);display:flex;align-items:center;justify-content:center;padding:22px}
-.login-card{width:min(440px,100%);background:#fff;border:1px solid var(--line);border-radius:24px;padding:26px;box-shadow:0 12px 40px rgba(17,24,39,.10)}
-.login-logo{font-size:34px;font-weight:950;letter-spacing:-1.5px;margin-bottom:6px}
+.account-chip{font-size:11px;font-weight:800;background:#242427;border:1px solid var(--line);color:#f4f4f5;padding:6px 9px;border-radius:999px;margin-top:5px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.login-overlay{position:fixed;inset:0;z-index:100;background:radial-gradient(ellipse at 50% 20%,#3b1e0c 0%,#171719 42%,#0d0d0f 100%);display:flex;align-items:center;justify-content:center;padding:22px}
+.login-card{width:min(440px,100%);background:#171719;border:1px solid #393034;border-radius:24px;padding:26px;box-shadow:0 18px 60px rgba(0,0,0,.45)}
+.login-logo{display:flex;align-items:center;gap:12px;font-size:32px;font-weight:950;letter-spacing:1.5px;color:var(--ink);margin-bottom:8px}.login-logo .renova-mark{width:58px;height:58px}
 .login-sub{color:var(--muted);line-height:1.5;margin:0 0 20px}
 .google-wrap{display:flex;justify-content:center;margin:16px 0 10px}
 .login-note{font-size:11px;color:var(--muted);text-align:center;line-height:1.45}
 .profile-card{border-radius:20px}
 .profile-main{display:flex;align-items:center;gap:12px}
-.profile-avatar{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#f1f5f9;font-size:22px;font-weight:900;overflow:hidden}
+.profile-avatar{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#352114;color:#ffc247;font-size:22px;font-weight:900;overflow:hidden}
 .profile-avatar img{width:100%;height:100%;object-fit:cover}
 .profile-info{min-width:0;flex:1}
 .profile-greeting{font-size:18px;font-weight:900;letter-spacing:-.3px}
@@ -51,20 +51,40 @@ input,textarea,select{width:100%;padding:11px 12px;border:1px solid #d1d5db;bord
 
 
 @media(min-width:600px){main{padding-left:20px;padding-right:20px}.nav{border-left:1px solid var(--line);border-right:1px solid var(--line);border-radius:18px 18px 0 0}}
+
+/* RENOVA — identidad del fénix */
+.renova-mark{width:42px;height:42px;flex:none;filter:drop-shadow(0 0 8px rgba(255,106,0,.18))}
+.renova-mark .wing{fill:var(--phoenix,#FF6A00)}
+.renova-mark .gold{fill:var(--phoenix-gold,#FFC247)}
+.renova-mark .core{fill:#F4F4F5}
+.renova-brand{display:flex;align-items:center;gap:10px;font-size:24px;font-weight:950;letter-spacing:1.5px;color:var(--ink)}
+.renova-tagline{font-size:11px;letter-spacing:.3px;color:var(--muted);margin-top:3px}
+.login-logo{display:flex;align-items:center;gap:12px;font-size:32px;font-weight:950;letter-spacing:1.5px;color:var(--ink);margin-bottom:8px}
+.login-logo .renova-mark{width:58px;height:58px}
+
 </style>
 </head>
 <body>
 
 <div class="login-overlay" id="loginOverlay">
   <div class="login-card">
-    <div class="login-logo">RESET 12</div>
-    <p class="login-sub">Tu transformación empieza hoy.<br>Inicia sesión para acceder a tu progreso personal.</p>
+    <div class="login-logo"><svg class="renova-mark" viewBox="0 0 100 100" role="img" aria-label="Fénix RENOVA">
+<path class="wing" d="M48 48 13 9 24 39 4 30 24 59 43 67 34 45Z"/>
+<path class="gold" d="M52 48 87 9 76 39 96 30 76 59 57 67 66 45Z"/>
+<path class="wing" d="M46 51 20 49 38 67 26 70 45 82 50 63Z"/>
+<path class="gold" d="M54 51 80 49 62 67 74 70 55 82 50 63Z"/>
+<path class="core" d="M50 23 60 43 55 61 50 76 45 61 40 43Z"/>
+<path class="gold" d="M43 82 50 96 57 82 50 87Z"/>
+</svg>
+<span>RENOVA</span></div>
+<div class="renova-tagline" style="color:#FFC247;font-weight:800;letter-spacing:1px;margin-bottom:12px">CONSTRUYE TU MEJOR VERSIÓN</div>
+    <p class="login-sub">Tu siguiente versión empieza hoy.<br>Inicia sesión para continuar tu progreso personal.</p>
     <div class="card" style="margin:0 0 14px;background:#f9fafb">
       <b>🔐 Acceso con Google</b>
       <p class="small" style="margin-bottom:0">Usaremos tu cuenta de Google para identificar tu perfil. Tu progreso seguirá guardándose localmente y podrás sincronizarlo con Drive. Google Calendar se conecta solo cuando tú lo autorices.</p>
     </div>
     <div class="google-wrap"><div id="googleSignInButton"></div></div>
-    <p class="login-note">No compartas contraseñas con RESET 12. La autenticación se realiza mediante Google.</p>
+    <p class="login-note">No compartas contraseñas con RENOVA. La autenticación se realiza mediante Google.</p>
   </div>
 </div>
 
@@ -83,7 +103,15 @@ input,textarea,select{width:100%;padding:11px 12px;border:1px solid #d1d5db;bord
     <button class="btn secondary" onclick="logoutReset12()">Cerrar sesión</button>
   </div>
 </div>
-<header><div class="top"><div><div class="brand">RESET 12</div><div class="sub">84 días · constancia sobre perfección</div></div><div><div class="xp" id="xpPill">0 XP · Nivel 1</div><div class="account-chip" id="accountChip" style="display:none"></div><div class="sub" style="text-align:right;margin-top:3px">🟢 Guardado local</div></div></div></header>
+<header><div class="top"><div><div class="renova-brand"><svg class="renova-mark" viewBox="0 0 100 100" role="img" aria-label="Fénix RENOVA">
+<path class="wing" d="M48 48 13 9 24 39 4 30 24 59 43 67 34 45Z"/>
+<path class="gold" d="M52 48 87 9 76 39 96 30 76 59 57 67 66 45Z"/>
+<path class="wing" d="M46 51 20 49 38 67 26 70 45 82 50 63Z"/>
+<path class="gold" d="M54 51 80 49 62 67 74 70 55 82 50 63Z"/>
+<path class="core" d="M50 23 60 43 55 61 50 76 45 61 40 43Z"/>
+<path class="gold" d="M43 82 50 96 57 82 50 87Z"/>
+</svg>
+<span>RENOVA</span></div><div class="renova-tagline">Construye tu mejor versión.</div><div class="sub">84 días · constancia sobre perfección</div></div><div><div class="xp" id="xpPill">0 XP · Nivel 1</div><div class="account-chip" id="accountChip" style="display:none"></div><div class="sub" style="text-align:right;margin-top:3px">🟠 Datos guardados en este dispositivo</div></div></div></header>
 
 <main>
 <section id="home" class="screen active">
@@ -98,7 +126,7 @@ input,textarea,select{width:100%;padding:11px 12px;border:1px solid #d1d5db;bord
     <div class="stat"><div class="num" id="weightHome">—</div><div class="label">peso actual</div></div>
     <div class="stat"><div class="num" id="waistHome">—</div><div class="label">cintura</div></div>
   </div>
-  <div class="card"><div class="row"><b>Mensaje del día</b><span class="tag">RESET 12</span></div><p id="quote">No necesitas hacerlo perfecto. Necesitas hacerlo hoy.</p></div>
+  <div class="card"><div class="row"><b>Mensaje del día</b><span class="tag">RENOVA</span></div><p id="quote">No necesitas hacerlo perfecto. Necesitas hacerlo hoy.</p></div>
   <button style="width:100%;margin-top:4px" onclick="show('check')">✓ HACER MI CHECKLIST</button><button class="btn secondary" style="width:100%;margin-top:8px" onclick="show('agenda')">📅 VER MI AGENDA</button>
 </section>
 
@@ -138,8 +166,8 @@ input,textarea,select{width:100%;padding:11px 12px;border:1px solid #d1d5db;bord
 
 <section id="agenda" class="screen">
   <h1>Mi agenda</h1><p class="lead">Organiza comida, entrenamiento, descanso y mediciones. Puedes llevarlo a Google Calendar.</p>
-  <div class="card"><div class="row"><b>Google Calendar</b><span class="tag" id="calendarTag">LOCAL</span></div><p class="small">RESET 12 solo accederá a Calendar cuando pulses conectar. Podrá consultar y crear eventos en tus calendarios autorizados.</p><div class="two"><button class="btn secondary" onclick="connectCalendar()">📅 Conectar</button><button class="btn" onclick="syncCalendarWeek()">☁️ Sincronizar semana</button></div><div id="calendarStatus" class="small" style="margin-top:8px"></div></div>
-  <div class="card"><div class="row"><b>Agenda de hoy</b><span class="tag">RESET 12</span></div><div id="todayAgenda" class="agenda-grid" style="margin-top:10px"></div></div>
+  <div class="card"><div class="row"><b>Google Calendar</b><span class="tag" id="calendarTag">LOCAL</span></div><p class="small">RENOVA solo accederá a Calendar cuando pulses conectar. Podrá consultar y crear eventos en tus calendarios autorizados.</p><div class="two"><button class="btn secondary" onclick="connectCalendar()">📅 Conectar</button><button class="btn" onclick="syncCalendarWeek()">☁️ Sincronizar semana</button></div><div id="calendarStatus" class="small" style="margin-top:8px"></div></div>
+  <div class="card"><div class="row"><b>Agenda de hoy</b><span class="tag">RENOVA</span></div><div id="todayAgenda" class="agenda-grid" style="margin-top:10px"></div></div>
   <div class="card"><div class="row"><b>➕ Nueva reunión / evento</b><span class="tag">CALENDAR</span></div>
     <div class="formgrid" style="margin-top:10px">
       <div style="grid-column:1/-1"><label class="small">Título</label><input id="eventTitle" placeholder="Ej. Reunión equipo JSA"></div>
@@ -166,7 +194,7 @@ input,textarea,select{width:100%;padding:11px 12px;border:1px solid #d1d5db;bord
   <p class="lead">Acceso rápido a tu correo Zimbra y herramientas para convertir correos en acciones.</p>
   <div class="card">
     <div class="row"><b>📧 Zimbra</b><span class="tag">CORPORATIVO</span></div>
-    <p class="small">Tu correo está alojado en Zimbra. RESET 12 no guarda tu contraseña ni la expone en GitHub.</p>
+    <p class="small">Tu correo está alojado en Zimbra. RENOVA no guarda tu contraseña ni la expone en GitHub.</p>
     <div class="mail-actions" style="margin-top:10px">
       <a class="btn" href="https://correo.sithonduras.com/" target="_blank" rel="noopener">📥 Abrir correo</a>
       <button class="btn secondary" onclick="openZimbraCompose()">✉️ Redactar</button>
@@ -201,7 +229,7 @@ input,textarea,select{width:100%;padding:11px 12px;border:1px solid #d1d5db;bord
   </div>
   <div class="card"><b>Tendencia</b><div id="trend" style="margin-top:10px"></div></div><div class="card"><b>Historial</b><div id="history"></div></div>
   <div class="card"><div class="row"><b>☁️ Google Drive</b><span class="tag" id="syncTag">LOCAL</span></div>
-<p class="small">Tu progreso se guarda en este teléfono y puede sincronizarse con tu Google Drive. RESET 12 actualizará el mismo respaldo para evitar duplicados.</p>
+<p class="small">Tu progreso se guarda en este teléfono. Antes de sincronizar, verifica que el perfil local tenga tus datos actuales. RENOVA actualizará el mismo respaldo para evitar duplicados.</p>
 <div class="two" style="margin-top:10px">
   <button class="btn secondary" onclick="connectDrive()">☁️ Conectar Drive</button>
   <button class="btn" onclick="backupDrive()">Guardar ahora</button>
@@ -259,7 +287,11 @@ function loadUserData(email){
   data.customHabits ||= []; data.agenda ||= {breakfast:'07:00',lunch:'13:00',gym:'19:00',dinner:'21:15',sleep:'23:00',measure:'06:00'}; data.shoppingList ||= []
 }
 
-function today(){return new Date().toISOString().slice(0,10)}
+function today(){
+  const d=new Date();
+  const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
 function getDay(){data.days[today()] ||= {checks:{},steps:'',water:'',sleep:'',calories:'',note:'',exercises:{}};return data.days[today()]}
 let syncTimer=null;
 function save(){
@@ -303,10 +335,24 @@ function saveProgress(){let w=parseFloat(document.getElementById('weight').value
 function renderTrend(){const e=document.getElementById('trend');if(!e)return;if(data.measurements.length<2){e.innerHTML='<div class="empty">Registra al menos 2 mediciones para ver tendencia.</div>';return}const a=data.measurements.slice(-6);const first=a[0],last=a[a.length-1],dw=(last.weight-first.weight).toFixed(1),dc=(last.waist-first.waist).toFixed(1);e.innerHTML=`<div class="grid"><div class="stat"><div class="num">${dw>0?'+':''}${dw} kg</div><div class="label">cambio de peso</div></div><div class="stat"><div class="num">${dc>0?'+':''}${dc} cm</div><div class="label">cambio de cintura</div></div></div><div class="small" style="margin-top:10px">${a.map(x=>`${x.date}: ${x.weight} kg · ${x.waist} cm`).join('<br>')}</div>`}
 function renderHistory(){let h=document.getElementById('history');if(!data.measurements.length){h.innerHTML='<div class="empty">Aún no hay mediciones.</div>';return}h.innerHTML=data.measurements.slice().reverse().map(x=>`<div class="check"><span><b>${x.date}</b><br><span class="small">${x.weight} kg · ${x.waist} cm cintura</span></span></div>`).join('')}
 function dayIndex(){if(!localStorage.getItem(startKey))localStorage.setItem(startKey,today());let a=new Date(localStorage.getItem(startKey)),b=new Date(today());return Math.min(84,Math.max(1,Math.floor((b-a)/86400000)+1))}
-function streak(){let s=0,d=new Date();for(let i=0;i<84;i++){let k=d.toISOString().slice(0,10),x=data.days[k];if(!x)break;let n=checklist.filter(q=>x.checks?.[q[0]]).length;if(n<5)break;s++;d.setDate(d.getDate()-1)}return s}
-function exportData(){let blob=new Blob([JSON.stringify({data,start:localStorage.getItem(startKey)},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='RESET12-backup-'+today()+'.json';a.click();URL.revokeObjectURL(a.href)}
+function streak(){
+  let s=0;
+  const d=new Date();
+  d.setHours(12,0,0,0);
+  for(let i=0;i<84;i++){
+    const k=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const x=data.days[k];
+    if(!x)break;
+    const n=checklist.filter(q=>x.checks?.[q[0]]).length;
+    if(n<5)break;
+    s++;
+    d.setDate(d.getDate()-1);
+  }
+  return s;
+}
+function exportData(){let blob=new Blob([JSON.stringify({data,start:localStorage.getItem(startKey)},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='RENOVA-backup-'+today()+'.json';a.click();URL.revokeObjectURL(a.href)}
 function importData(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let o=JSON.parse(r.result);data=o.data;localStorage.setItem(startKey,o.start||today());save();render();toast('Backup importado')}catch{toast('Archivo no válido')}};r.readAsText(f)}
-function resetAll(){if(confirm('¿Borrar todos tus datos de RESET 12? Esta acción no se puede deshacer.')){localStorage.removeItem(KEY);localStorage.removeItem(startKey);location.reload()}}
+function resetAll(){if(confirm('¿Borrar todos tus datos de RENOVA? Esta acción no se puede deshacer.')){localStorage.removeItem(KEY);localStorage.removeItem(startKey);location.reload()}}
 
 const MENUS=[
  {title:'Día 1 · Pollo & arroz',items:['Desayuno: 3 huevos + 2 claras + arepa pequeña + fruta','Almuerzo: 180 g pollo + 150 g arroz cocido + ensalada + 1 cdita aceite','Cena: 180 g carne magra + papa mediana + verduras']},
@@ -332,9 +378,9 @@ function connectCalendar(){if(!currentUser){toast('Primero inicia sesión con Go
 async function calendarFetch(url,options={}){if(!calendarToken)throw new Error('NO_CAL_TOKEN');options.headers=Object.assign({},options.headers||{},{Authorization:'Bearer '+calendarToken,'Content-Type':'application/json'});const r=await fetch(url,options);if(r.status===401){calendarToken=null;setCalendarTag('LOCAL');throw new Error('CAL_AUTH_EXPIRED')}if(!r.ok){const body=await r.text();console.error('Calendar API error',r.status,body);throw new Error('CAL_API_'+r.status+'_'+body)}return r}
 function isoFor(date,time){return new Date(`${date}T${time||'07:00'}:00-05:00`).toISOString()}
 function eventId(date,type){return ('reset12'+date.replace(/-/g,'')+type).replace(/[^a-v0-9]/gi,'').toLowerCase()}
-function calendarEvent(date,type,time,title,duration){const start=isoFor(date,time),end=new Date(new Date(start).getTime()+duration*60000).toISOString();return {id:eventId(date,type),summary:'RESET 12 · '+title,description:'Evento creado por RESET 12 · 84 días · constancia sobre perfección.',start:{dateTime:start,timeZone:'America/Bogota'},end:{dateTime:end,timeZone:'America/Bogota'},reminders:{useDefault:true}}}
+function calendarEvent(date,type,time,title,duration){const start=isoFor(date,time),end=new Date(new Date(start).getTime()+duration*60000).toISOString();return {id:eventId(date,type),summary:'RENOVA · '+title,description:'Evento creado por RENOVA · Construye tu mejor versión.',start:{dateTime:start,timeZone:'America/Bogota'},end:{dateTime:end,timeZone:'America/Bogota'},reminders:{useDefault:true}}}
 async function insertCalendarEvent(ev,notify=false){const qs='sendUpdates='+(notify?'all':'none');try{await calendarFetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?'+qs,{method:'POST',body:JSON.stringify(ev)});return true}catch(e){if(String(e.message).includes('CAL_API_409'))return true;throw e}}
-async function syncCalendarWeek(){if(!calendarToken){calendarMsg('Conecta Google Calendar primero.');toast('Pulsa Conectar');return}try{calendarMsg('Sincronizando 7 días…');const a=data.agenda||{};const todayD=new Date();const jobs=[['breakfast','desayuno','Desayuno',30],['lunch','almuerzo','Almuerzo',45],['gym','gym','Entrenamiento',120],['dinner','cena','Cena',30],['sleep','sleep','Dormir',480]];for(let i=0;i<7;i++){const d=new Date(todayD);d.setDate(todayD.getDate()+i);const date=d.toISOString().slice(0,10);for(const [key,type,title,dur] of jobs)await insertCalendarEvent(calendarEvent(date,type,a[key],title,dur),false)}calendarMsg('🟢 Semana sincronizada sin duplicar eventos.');toast('Semana enviada a Calendar');await renderCalendarEvents()}catch(e){console.error(e);calendarMsg('❌ Error Calendar: '+(e.message||'revisa el permiso y la API'));toast('Error con Calendar')}}
+async function syncCalendarWeek(){if(!calendarToken){calendarMsg('Conecta Google Calendar primero.');toast('Pulsa Conectar');return}try{calendarMsg('Sincronizando 7 días…');const a=data.agenda||{};const todayD=new Date();const jobs=[['breakfast','desayuno','Desayuno',30],['lunch','almuerzo','Almuerzo',45],['gym','gym','Entrenamiento',120],['dinner','cena','Cena',30],['sleep','sleep','Dormir',480]];for(let i=0;i<7;i++){const d=new Date(todayD);d.setDate(todayD.getDate()+i);const date=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;for(const [key,type,title,dur] of jobs)await insertCalendarEvent(calendarEvent(date,type,a[key],title,dur),false)}calendarMsg('🟢 Semana sincronizada sin duplicar eventos.');toast('Semana enviada a Calendar');await renderCalendarEvents()}catch(e){console.error(e);calendarMsg('❌ Error Calendar: '+(e.message||'revisa el permiso y la API'));toast('Error con Calendar')}}
 function escHtml(v){return String(v||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
 function setDefaultEventDate(){const e=document.getElementById('eventDate');if(e&&!e.value)e.value=today()}
 function calcEventTimes(){const d=document.getElementById('eventDuration')?.value;const wrap=document.getElementById('eventEndWrap');if(wrap)wrap.style.display=d==='custom'?'block':'none';if(d!=='custom'){const st=document.getElementById('eventStart')?.value||'08:00';const [h,m]=st.split(':').map(Number);const end=new Date(2000,0,1,h,m);end.setMinutes(end.getMinutes()+Number(d||60));const e=document.getElementById('eventEnd');if(e)e.value=String(end.getHours()).padStart(2,'0')+':'+String(end.getMinutes()).padStart(2,'0')}}
@@ -424,13 +470,20 @@ async function backupDrive(silent=false){
     if(!silent)driveMsg('Guardando respaldo…');
     const folder=await findResetFolder();
     const payload=JSON.stringify({
-      version:'RESET12-V7',
+      version:'RENOVA-V1',
       savedAt:new Date().toISOString(),
       user:{email:currentUser.email,name:currentUser.name},
       data:data,
       start:localStorage.getItem(startKey)
     },null,2);
     const existing=await findResetBackup(folder);
+    const hasLocalProgress=Object.keys(data.days||{}).length>0 || (data.measurements||[]).length>0 || (data.customHabits||[]).length>0 || Number(data.xp||0)>0;
+    if(existing && !hasLocalProgress){
+      driveMsg('⚠️ Ya existe un respaldo en Drive y este perfil local está vacío. No se sobrescribió. Exporta/recupera tus datos antes de guardar.');
+      setSyncTag('REVISAR');
+      if(!silent)toast('Respaldo protegido: perfil local vacío');
+      return;
+    }
     let r;
     if(existing){
       r=await driveFetch('https://www.googleapis.com/upload/drive/v3/files/'+existing+'?uploadType=media&fields=id,name,modifiedTime',{
@@ -524,10 +577,10 @@ function initGoogleLogin(){
 function showAccountInfo(){
   if(!currentUser)return;
   const last=localStorage.getItem(userKey(currentUser.email,'reset12_last_drive_backup'));
-  alert('RESET 12\\n\\nCuenta: '+currentUser.email+'\\nNombre: '+(currentUser.name||'Usuario')+'\\n\\n'+(driveToken?'☁️ Drive: conectado':'📱 Drive: no conectado')+(last?'\\nÚltimo respaldo: '+new Date(last).toLocaleString('es-CO'):''));
+  alert('RENOVA\\nConstruye tu mejor versión\\n\\nCuenta: '+currentUser.email+'\\nNombre: '+(currentUser.name||'Usuario')+'\\n\\n'+(driveToken?'☁️ Drive: conectado':'📱 Drive: no conectado')+(last?'\\nÚltimo respaldo: '+new Date(last).toLocaleString('es-CO'):''));
 }
 function logoutReset12(){
-  if(!confirm('¿Cerrar sesión de RESET 12 en este dispositivo? Tus datos locales y el respaldo de Drive NO se borrarán.'))return;
+  if(!confirm('¿Cerrar sesión de RENOVA en este dispositivo? Tus datos locales y el respaldo de Drive NO se borrarán.'))return;
   try{if(window.google?.accounts?.id?.disableAutoSelect)google.accounts.id.disableAutoSelect()}catch{}
   calendarToken=null;sessionStorage.removeItem('reset12_calendar_token');driveToken=null;sessionStorage.removeItem('reset12_drive_token');
   localStorage.removeItem('reset12_user');
