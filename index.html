@@ -131,8 +131,8 @@ input,textarea,select{width:100%;padding:11px 12px;border:1px solid #d1d5db;bord
 </section>
 
 <section id="gym" class="screen">
-  <h1>Entrenamiento</h1><p class="lead">Vuelve progresivamente. La primera meta es recuperar el hábito.</p>
-  <div class="card"><b>Semana actual</b><p class="small">Objetivo: fuerza 4 días la primera semana y subir gradualmente. Si hay dolor inusual, detente y consulta.</p></div>
+  <h1>Gym</h1><p class="lead">Rutina RENOVA · registra cada serie, peso y repeticiones para medir tu progreso.</p>
+  <div class="card"><div class="row"><b>Tu ciclo de entrenamiento</b><span class="tag">5 días</span></div><label class="small" for="gymDaySelect">Seleccionar rutina</label><select id="gymDaySelect" onchange="selectGymDay(this.value)" style="margin-top:6px"><option value="1">Día 1 · Empujes</option><option value="2">Día 2 · Tracciones</option><option value="3">Día 3 · Piernas</option><option value="4">Día 4 · Recuperación y abdomen</option><option value="5">Día 5 · Torso</option></select><p class="small" style="margin-bottom:0">El día sugerido sigue tu ciclo de 5 días; puedes elegir otro día cuando lo necesites.</p></div>
   <div id="exercises"></div>
 </section>
 
@@ -238,11 +238,35 @@ const DEFAULT_CHECKLIST=[
 ];
 let checklist=DEFAULT_CHECKLIST.map(x=>[...x]);
 const exercises=[
- ['Día 1 · Tren superior','Press pecho','Remo','Press hombro','Jalón al pecho','Bíceps','Tríceps'],
- ['Día 2 · Tren inferior','Prensa','Peso muerto rumano','Extensión de cuádriceps','Curl femoral','Gemelos','Caminata 10–15 min'],
- ['Día 3 · Descanso activo','Caminata 30–45 min','Movilidad 10 min'],
- ['Día 4 · Tren superior','Press inclinado','Remo sentado','Elevaciones laterales','Jalón','Bíceps','Tríceps'],
- ['Día 5 · Tren inferior','Sentadilla/prensa','Peso muerto rumano','Extensión','Curl femoral','Gemelos','Caminata 10–20 min']
+ {dia:1,nombre:'Empujes',grupos:'Pecho, hombros y tríceps',items:[
+  {nombre:'Press banca plano con barra',grupo:'Pecho',series:4,reps:'8-10',descanso:150},
+  {nombre:'Press inclinado con mancuernas',grupo:'Pecho',series:3,reps:'8-12',descanso:120},
+  {nombre:'Press de hombros en máquina',grupo:'Hombros',series:3,reps:'8-12',descanso:120},
+  {nombre:'Elevaciones laterales con mancuernas',grupo:'Hombros',series:3,reps:'12-15',descanso:75},
+  {nombre:'Extensión de tríceps en polea',grupo:'Tríceps',series:3,reps:'10-15',descanso:75}]},
+ {dia:2,nombre:'Tracciones',grupos:'Espalda y bíceps',items:[
+  {nombre:'Jalón al pecho en polea',grupo:'Espalda',series:4,reps:'8-12',descanso:120},
+  {nombre:'Remo sentado en polea',grupo:'Espalda',series:3,reps:'8-12',descanso:120},
+  {nombre:'Remo con apoyo en pecho',grupo:'Espalda',series:3,reps:'10-12',descanso:120},
+  {nombre:'Pullover en polea',grupo:'Espalda',series:3,reps:'12-15',descanso:75},
+  {nombre:'Curl de bíceps con mancuernas',grupo:'Bíceps',series:3,reps:'10-12',descanso:75},
+  {nombre:'Curl de bíceps inclinado',grupo:'Bíceps',series:2,reps:'10-15',descanso:75}]},
+ {dia:3,nombre:'Piernas',grupos:'Cuádriceps, glúteos, femorales y pantorrillas',items:[
+  {nombre:'Sentadilla con barra',grupo:'Cuádriceps y glúteos',series:3,reps:'8-10',descanso:150},
+  {nombre:'Hip thrust',grupo:'Glúteos',series:3,reps:'8-12',descanso:120},
+  {nombre:'Extensión de cuádriceps',grupo:'Cuádriceps',series:3,reps:'12-15',descanso:75},
+  {nombre:'Curl femoral en máquina',grupo:'Femorales',series:3,reps:'10-15',descanso:90},
+  {nombre:'Elevación de gemelos',grupo:'Pantorrillas',series:3,reps:'12-20',descanso:60}]},
+ {dia:4,nombre:'Recuperación y abdomen',grupos:'Abdomen y recuperación activa',items:[
+  {nombre:'Crunch abdominal',grupo:'Abdomen',series:3,reps:'12-20',descanso:60},
+  {nombre:'Plancha abdominal',grupo:'Abdomen',series:3,reps:'30-45 segundos',descanso:60},
+  {nombre:'Caminata suave o movilidad',grupo:'Recuperación',series:1,reps:'10-20 minutos',descanso:0}]},
+ {dia:5,nombre:'Torso',grupos:'Pecho, espalda y hombros',items:[
+  {nombre:'Press de pecho en máquina',grupo:'Pecho',series:3,reps:'8-12',descanso:120},
+  {nombre:'Remo en máquina',grupo:'Espalda',series:3,reps:'8-12',descanso:120},
+  {nombre:'Jalón al pecho',grupo:'Espalda',series:3,reps:'10-12',descanso:90},
+  {nombre:'Press de hombros con mancuernas',grupo:'Hombros',series:3,reps:'8-12',descanso:120},
+  {nombre:'Elevaciones laterales',grupo:'Hombros',series:2,reps:'12-15',descanso:60}]}
 ];
 let data={days:{},measurements:[],xp:0,customHabits:[],agenda:{breakfast:'07:00',lunch:'13:00',gym:'19:00',dinner:'21:15',sleep:'23:00',measure:'06:00'},shoppingList:[]};
 function userKey(email,suffix){return suffix+'_'+encodeURIComponent(email.toLowerCase())}
@@ -298,12 +322,28 @@ function addChecklistTask(){const input=document.getElementById('newChecklistTas
 function removeChecklistTask(key){const task=checklist.find(x=>x[0]===key);if(!task)return;if(!confirm('¿Eliminar la tarea “'+task[1]+'” del checklist? Se quitará también de los registros diarios.'))return;checklist=checklist.filter(x=>x[0]!==key);data.checklistItems=checklist.map(x=>[...x]);Object.values(data.days||{}).forEach(day=>{if(day.checks)delete day.checks[key]});save();render();toast('Tarea eliminada')}
 function toggleCheck(k,v){let d=getDay();if(d.checks[k]===v)return;d.checks[k]=v;data.xp+=v?25:-25;if(data.xp<0)data.xp=0;save();render();toast(v?'✓ Hecho · +25 XP':'Marcado como pendiente')}
 function saveDay(){let d=getDay();['steps','water','sleep','calories','note'].forEach(k=>d[k]=document.getElementById(k).value);save();toast('Día guardado');render()}
+function selectGymDay(value){data.gymSelectedDay=Math.min(5,Math.max(1,parseInt(value,10)||1));save();renderExercises()}
 function renderExercises(){
- const idx=((dayIndex()-1)%5), arr=exercises[idx];
- document.getElementById('exercises').innerHTML=`<div class="card"><b>${arr[0]}</b><div class="small">Registra peso y repeticiones para aprender de tu progreso.</div></div>`+
- arr.slice(1).map((name,i)=>{let k='e'+i,v=getDay().exercises[k]||{};return `<div class="exercise"><div class="name">${name}</div><div class="two"><input placeholder="kg" type="number" step=".5" value="${v.kg||''}" onchange="ex('${k}','kg',this.value)"><input placeholder="reps" type="number" value="${v.reps||''}" onchange="ex('${k}','reps',this.value)"></div></div>`}).join('');
+ const autoDay=((dayIndex()-1)%5)+1;
+ const selected=Math.min(5,Math.max(1,parseInt(data.gymSelectedDay||autoDay,10)||autoDay));
+ const routine=exercises[selected-1];
+ const todayData=getDay();todayData.exercises ||= {};
+ const totalSets=routine.items.reduce((n,e)=>n+e.series,0);
+ const doneSets=routine.items.reduce((n,e,i)=>n+Array.from({length:e.series},(_,s)=>todayData.exercises[`d${selected}_e${i}_s${s}`]?.done?1:0).reduce((a,b)=>a+b,0),0);
+ const options=exercises.map(r=>`<option value="${r.dia}" ${r.dia===selected?'selected':''}>Día ${r.dia} · ${r.nombre}</option>`).join('');
+ const header=`<div class="card"><div class="row"><div><b>Día ${routine.dia} · ${routine.nombre}</b><div class="small">${routine.grupos}</div></div><span class="tag">${doneSets}/${totalSets} series</span></div><div class="progress" style="margin-top:12px"><div class="bar" style="width:${totalSets?Math.round(doneSets/totalSets*100):0}%"></div></div></div>`;
+ const cards=routine.items.map((item,i)=>{
+  const base=`d${selected}_e${i}`,saved=todayData.exercises[base]||{};
+  const sets=Array.from({length:item.series},(_,s)=>{const k=`${base}_s${s}`,sv=todayData.exercises[k]||{};return `<label class="check" style="padding:7px 0"><input type="checkbox" ${sv.done?'checked':''} onchange="gymSet('${k}','done',this.checked)"><span>Serie ${s+1}</span><span class="small">${item.reps} reps</span></label>`}).join('');
+  return `<div class="exercise"><div class="row"><div class="name">${i+1}. ${item.nombre}</div><span class="tag">${item.series} series</span></div><div class="small">${item.grupo} · objetivo ${item.reps} reps · ${item.descanso?`descanso ${item.descanso} s`:'actividad continua'}</div><div class="two"><div><label class="small">Peso utilizado (kg)</label><input aria-label="Peso ${item.nombre}" placeholder="kg" type="number" min="0" step="0.5" value="${saved.kg??''}" onchange="gymExercise('${base}','kg',this.value)"></div><div><label class="small">Repeticiones realizadas</label><input aria-label="Repeticiones ${item.nombre}" placeholder="reps" type="number" min="0" step="1" value="${saved.reps??''}" onchange="gymExercise('${base}','reps',this.value)"></div></div><div style="margin-top:8px">${sets}</div>${item.descanso?`<button type="button" class="btn secondary" style="width:100%;margin-top:8px" onclick="startRest(${item.descanso})">⏱ Iniciar descanso · ${item.descanso} s</button>`:''}</div>`
+ }).join('');
+ document.getElementById('exercises').innerHTML=header+cards;
+ const selector=document.getElementById('gymDaySelect');if(selector)selector.value=String(selected);
 }
-function ex(k,f,v){getDay().exercises[k]||={};getDay().exercises[k][f]=v;save()}
+function gymExercise(key,field,value){getDay().exercises ||= {};getDay().exercises[key] ||= {};getDay().exercises[key][field]=value;save();renderExercises()}
+function gymSet(key,field,value){getDay().exercises ||= {};getDay().exercises[key] ||= {};getDay().exercises[key][field]=value;save();renderExercises()}
+let restTimerInterval=null;
+function startRest(seconds){if(restTimerInterval)clearInterval(restTimerInterval);let left=seconds;toast(`Descanso: ${left} s`);restTimerInterval=setInterval(()=>{left--;if(left<=0){clearInterval(restTimerInterval);restTimerInterval=null;toast('¡Descanso terminado!');if(navigator.vibrate)navigator.vibrate([150,80,150])}else if(left%15===0)toast(`Descanso: ${left} s restantes`)},1000)}
 function saveProgress(){let w=parseFloat(document.getElementById('weight').value),wa=parseFloat(document.getElementById('waist').value);if(!w||!wa){toast('Completa peso y cintura');return}data.measurements.push({date:today(),weight:w,waist:wa});save();toast('Medición guardada');render()}
 function renderTrend(){const e=document.getElementById('trend');if(!e)return;if(data.measurements.length<2){e.innerHTML='<div class="empty">Registra al menos 2 mediciones para ver tendencia.</div>';return}const a=data.measurements.slice(-6);const first=a[0],last=a[a.length-1],dw=(last.weight-first.weight).toFixed(1),dc=(last.waist-first.waist).toFixed(1);e.innerHTML=`<div class="grid"><div class="stat"><div class="num">${dw>0?'+':''}${dw} kg</div><div class="label">cambio de peso</div></div><div class="stat"><div class="num">${dc>0?'+':''}${dc} cm</div><div class="label">cambio de cintura</div></div></div><div class="small" style="margin-top:10px">${a.map(x=>`${x.date}: ${x.weight} kg · ${x.waist} cm`).join('<br>')}</div>`}
 function renderHistory(){let h=document.getElementById('history');if(!data.measurements.length){h.innerHTML='<div class="empty">Aún no hay mediciones.</div>';return}h.innerHTML=data.measurements.slice().reverse().map(x=>`<div class="check"><span><b>${x.date}</b><br><span class="small">${x.weight} kg · ${x.waist} cm cintura</span></span></div>`).join('')}
