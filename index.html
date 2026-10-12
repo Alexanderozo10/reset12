@@ -1,0 +1,946 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0d12">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="RENOVA">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<title>RENOVA · Construye tu mejor versión</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+:root{color-scheme:dark;--bg:#0b0d12;--card:#141821;--ink:#f5f5f5;--muted:#a0a7b4;--line:#2b303b;--accent:#ff7a1a;--ok:#35c985;--warn:#ffb02e;--danger:#ff5b5b}
+*{box-sizing:border-box}html{background:var(--bg)}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg);padding-bottom:92px}
+header{position:sticky;top:0;z-index:10;background:rgba(11,13,18,.94);backdrop-filter:blur(14px);padding:14px 16px 10px;border-bottom:1px solid var(--line)}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px}.brand{font-weight:900;font-size:22px;letter-spacing:-.5px}.sub{font-size:12px;color:var(--muted)}
+.xp{font-size:12px;font-weight:800;background:#1a202b;border:1px solid var(--line);padding:7px 10px;border-radius:999px}
+main{max-width:720px;margin:auto;padding:14px 14px 24px}.screen{display:none}.screen.active{display:block}
+h1{font-size:28px;line-height:1.05;margin:8px 0 4px}.lead{color:var(--muted);margin:0 0 16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:15px;margin:10px 0;box-shadow:0 2px 8px rgba(17,24,39,.04)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{padding:13px;border-radius:15px;background:#1a202b;border:1px solid var(--line)}.num{font-size:24px;font-weight:900}.label{font-size:12px;color:var(--muted)}
+.progress{height:10px;background:#2b303b;border-radius:999px;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,#ff7a1a,#ffbd45);width:0;transition:.25s}
+.check{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line)}.check:last-child{border:0}.check input{width:23px;height:23px;accent-color:#ff8a24}.check span{flex:1}.done{text-decoration:line-through;color:var(--muted)}
+button,.btn{font-family:inherit;font-size:14px;border:0;border-radius:12px;padding:11px 13px;font-weight:800;background:linear-gradient(135deg,#ff7a1a,#ffad32);color:#17100a;cursor:pointer}.btn.secondary{background:#202632;color:#e9ecf2;border:1px solid var(--line)}.btn.danger{background:#3a1d22;color:#ff9b9b;border:1px solid #5a2a31}a.btn{display:inline-block;text-align:center;text-decoration:none}
+input,textarea,select{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:#0f131a;color:var(--ink);font:inherit}input:focus,textarea:focus,select:focus{outline:2px solid #ff8a24;outline-offset:1px}input[type=checkbox]{width:auto}textarea{min-height:95px;resize:vertical}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}
+.tag{font-size:11px;font-weight:800;border-radius:999px;padding:5px 8px;background:#202632;color:#c9ced8}
+.agenda-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.agenda-item{border:1px solid var(--line);border-radius:14px;padding:11px;background:#171c25}.agenda-time{font-size:12px;font-weight:900}.agenda-title{font-weight:800;margin-top:3px}.menu-box{border:1px solid var(--line);border-radius:14px;padding:12px;margin:9px 0}.menu-day{font-size:12px;color:var(--muted);font-weight:800}.menu-title{font-weight:900;margin:3px 0 5px}.pill-row{display:flex;gap:7px;flex-wrap:wrap}.pill{padding:7px 9px;border:1px solid var(--line);border-radius:999px;background:#1a202b;font-size:11px;font-weight:800}.nav{position:fixed;bottom:0;left:0;right:0;z-index:20;background:rgba(17,21,29,.97);backdrop-filter:blur(14px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(5,1fr);padding:8px max(8px,env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom));max-width:720px;margin:auto}
+.nav button{background:transparent;color:#a0a7b4;padding:8px 3px;font-size:12px}.nav button.active{color:#ff9b32;font-weight:900}.ico{display:block;font-size:19px;margin-bottom:2px}
+.exercise{border:1px solid var(--line);border-radius:14px;padding:12px;margin:9px 0}.exercise .name{font-weight:900}.two{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.toast{position:fixed;left:50%;bottom:82px;transform:translateX(-50%);background:#111827;color:white;padding:10px 14px;border-radius:999px;font-size:12px;display:none;z-index:30}.toast.show{display:block}
+.small{font-size:12px;color:var(--muted)}.center{text-align:center}.empty{padding:24px;text-align:center;color:var(--muted)}
+.account-chip{cursor:pointer;color:var(--ink);font-size:11px;font-weight:800;background:#202632;border:1px solid var(--line);padding:6px 9px;border-radius:999px;margin-top:5px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.login-overlay{position:fixed;inset:0;z-index:100;background:linear-gradient(180deg,#0b0d12,#111722);display:flex;align-items:center;justify-content:center;padding:22px}
+.login-card{width:min(440px,100%);background:#141821;border:1px solid var(--line);border-radius:24px;padding:26px;box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.login-logo{font-size:34px;font-weight:950;letter-spacing:-1.5px;margin-bottom:6px}
+.login-sub{color:var(--muted);line-height:1.5;margin:0 0 20px}
+.google-wrap{display:flex;justify-content:center;margin:16px 0 10px}
+.login-note{font-size:11px;color:var(--muted);text-align:center;line-height:1.45}
+.profile-card{border-radius:20px}
+.profile-main{display:flex;align-items:center;gap:12px}
+.profile-avatar{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#202632;font-size:22px;font-weight:900;overflow:hidden}
+.profile-avatar img{width:100%;height:100%;object-fit:cover}
+.profile-info{min-width:0;flex:1}
+.profile-greeting{font-size:18px;font-weight:900;letter-spacing:-.3px}
+.profile-email{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.profile-status{font-size:11px;font-weight:800;margin-top:3px}
+.profile-actions{display:flex;gap:8px;margin-top:12px}
+.profile-actions .btn{flex:1;padding:10px 8px}
+
+
+.btn.sm{padding:7px 10px;font-size:13px}.sethead,.setrow{display:grid;grid-template-columns:52px 1fr 1fr 58px;gap:8px;align-items:center}.sethead{font-size:11px;color:var(--muted);font-weight:800;margin-top:10px;padding:0 2px}.setrow{padding:6px 0;border-top:1px solid var(--line)}.setrow input[type=number]{padding:10px;text-align:center}.setrow.isdone input[type=number]{border-color:#2f6b4f;background:#0f1d17}.setchk{display:flex;align-items:center;gap:6px;font-weight:900}.setchk input{width:24px;height:24px;accent-color:#35c985}.prbadge{font-size:11px;font-weight:900;color:#ffbd45}.lastline{font-size:12px;color:#c9ced8;margin-top:4px}.restbar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom));z-index:25;display:none;align-items:center;gap:10px;background:#1d2533;border:1px solid #ff8a24;border-radius:999px;padding:8px 10px 8px 16px;box-shadow:0 8px 24px rgba(0,0,0,.45);white-space:nowrap}.restbar.show{display:flex}.restbar b{font-size:22px;font-variant-numeric:tabular-nums;min-width:56px;text-align:center;color:#ffbd45}dialog{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:20px;padding:18px;width:min(440px,calc(100% - 32px))}dialog::backdrop{background:rgba(0,0,0,.6)}.summary{border-color:#2f6b4f}body.resting .toast{bottom:calc(140px + env(safe-area-inset-bottom))}
+@media(min-width:600px){main{padding-left:20px;padding-right:20px}.nav{border-left:1px solid var(--line);border-right:1px solid var(--line);border-radius:18px 18px 0 0}}
+</style>
+</head>
+<body>
+
+<div class="login-overlay" id="loginOverlay">
+  <div class="login-card">
+    <div class="login-logo"><svg aria-hidden="true" viewBox="0 0 64 64" style="width:32px;height:32px;vertical-align:middle;margin-right:7px"><path fill="#ff7a1a" d="M32 3 25 19 9 10 18 27 4 34 23 35 16 51 29 42 32 61 35 42 48 51 41 35 60 34 46 27 55 10 39 19Z"/><path fill="#ffbd45" d="M32 17 27 30 20 26 27 37 24 47 32 40 40 47 37 37 44 26 37 30Z"/><path fill="#0b0d12" d="M30 27h4l-2 13Z"/></svg><span style="color:#ff8a24">RENOVA</span></div><div style="font-size:13px;font-weight:800;color:#ffbd45;margin:-2px 0 10px">Construye tu mejor versión</div>
+    <p class="login-sub">Inicia sesión para acceder a tu progreso personal.</p>
+    <div class="card" style="margin:0 0 14px;background:#1a202b">
+      <b>🔐 Acceso con Google</b>
+      <p class="small" style="margin-bottom:0">Usaremos tu cuenta de Google para identificar tu perfil. Tus datos se guardan en tu cuenta en la nube y funcionan también sin conexión: los cambios se suben solos cuando vuelve la señal. Google Calendar es opcional.</p>
+    </div>
+    <div class="google-wrap"><div id="googleSignInButton"></div></div>
+    <p class="login-note">No compartas contraseñas con RENOVA. La autenticación se realiza mediante Google.</p>
+  </div>
+</div>
+
+
+<header><div class="top"><div><div class="brand" style="color:#ff8a24"><svg aria-hidden="true" viewBox="0 0 64 64" style="width:32px;height:32px;vertical-align:middle;margin-right:7px"><path fill="#ff7a1a" d="M32 3 25 19 9 10 18 27 4 34 23 35 16 51 29 42 32 61 35 42 48 51 41 35 60 34 46 27 55 10 39 19Z"/><path fill="#ffbd45" d="M32 17 27 30 20 26 27 37 24 47 32 40 40 47 37 37 44 26 37 30Z"/><path fill="#0b0d12" d="M30 27h4l-2 13Z"/></svg><span style="vertical-align:middle">RENOVA</span></div><div class="sub">Construye tu mejor versión · 84 días</div></div><div><div class="xp" id="xpPill">0 XP · Nivel 1</div><button type="button" class="account-chip" id="accountChip" style="display:none" onclick="openAccount()" aria-label="Abrir mi cuenta"></button><div class="sub" id="syncPill" role="status" aria-live="polite" style="text-align:right;margin-top:3px">📱 Solo este dispositivo</div></div></div></header>
+
+<main>
+<section id="home" class="screen active">
+  <h1>Hoy importa.</h1><p class="lead" id="todayLabel"></p>
+  <div class="card">
+    <div class="row"><b>Progreso de hoy</b><span id="dayPct">0%</span></div>
+    <div class="progress" style="margin-top:10px"><div class="bar" id="dayBar"></div></div>
+  </div>
+  <div class="grid">
+    <div class="stat"><div class="num" id="streak">0</div><div class="label">días de racha</div></div>
+    <div class="stat"><div class="num" id="dayNum">1/84</div><div class="label">día del ciclo</div></div>
+    <div class="stat"><div class="num" id="weightHome">—</div><div class="label">peso actual</div></div>
+    <div class="stat"><div class="num" id="waistHome">—</div><div class="label">cintura</div></div>
+  </div>
+  <div class="card"><div class="row"><b>Mensaje del día</b><span class="tag">RENOVA</span></div><p id="quote">No necesitas hacerlo perfecto. Necesitas hacerlo hoy.</p></div>
+  <button style="width:100%;margin-top:4px" onclick="show('check')">✓ HACER MI CHECKLIST</button><div class="two"><button class="btn secondary" onclick="show('food')">🍽 Mi nutrición</button><button class="btn secondary" onclick="show('agenda')">📅 Mi agenda</button></div>
+</section>
+
+<section id="check" class="screen">
+  <h1>Checklist</h1><p class="lead">Marca lo que sí hiciste. Sin drama si algo queda pendiente.</p>
+  <div class="card"><div class="row"><b>Mis hábitos diarios</b><span class="tag">Editable</span></div><p class="small">Crea los hábitos que quieres cumplir cada día. Al quitar uno, su historial se conserva.</p><div class="two"><input id="newChecklistTask" maxlength="100" placeholder="Ej. Caminar 30 minutos" onkeydown="if(event.key==='Enter'){event.preventDefault();addChecklistTask()}"><button class="btn" onclick="addChecklistTask()">+ Crear hábito</button></div><div id="checks" style="margin-top:10px"></div></div>
+  <div class="card">
+    <b>Datos rápidos</b>
+    <div class="formgrid" style="margin-top:10px">
+      <div><label class="small">Pasos</label><input id="steps" type="number" min="0" placeholder="8000"></div>
+      <div><label class="small">Agua (L)</label><input id="water" type="number" min="0" step=".1" placeholder="2.5"></div>
+      <div><label class="small">Sueño (h)</label><input id="sleep" type="number" min="0" step=".1" placeholder="7"></div>
+      <div><label class="small">Calorías (opcional)</label><input id="calories" type="number" min="0" placeholder="2000"></div>
+      <div class="full"><label class="small">Nota del día</label><textarea id="note" placeholder="¿Cómo te fue hoy?"></textarea></div>
+    </div>
+    <button style="margin-top:10px;width:100%" onclick="saveDay()">Guardar día</button>
+  </div>
+</section>
+
+<section id="food" class="screen">
+  <button type="button" class="btn secondary" style="padding:7px 11px;margin-top:4px" onclick="show('home')">← Inicio</button><h1>Nutrición</h1><p class="lead">Menús rotativos, cantidades claras y opciones sencillas. Sin pescado.</p>
+  <div class="card"><b>Objetivo inicial</b><div class="grid" style="margin-top:10px">
+    <div class="stat"><div class="num">≈ 2.000</div><div class="label">kcal orientativas</div></div>
+    <div class="stat"><div class="num">150–170 g</div><div class="label">proteína/día</div></div>
+  </div><p class="small" style="margin-bottom:0">Es un punto de partida, no una prescripción médica. Ajusta según evolución y acompañamiento profesional.</p></div>
+  <div class="card"><div class="row"><b>Menú de hoy</b><span class="tag" id="menuDayTag">Día 1</span></div><div id="todayMenu"></div></div>
+  <div class="card"><b>Rotación de 7 días</b><div id="weekMenus"></div></div>
+  <div class="card"><div class="row"><b>🛒 Lista de compras</b><button class="btn secondary" onclick="generateShoppingList()">Generar</button></div><div id="shoppingList" class="small" style="margin-top:10px">Genera una lista según los menús de la semana.</div></div>
+</section>
+
+<section id="gym" class="screen">
+  <h1>Gym</h1><p class="lead">Rutina RENOVA · registra cada serie, peso y repeticiones para medir tu progreso.</p>
+  <div class="card"><b>Crear mi rutina</b><p class="small">No hay rutinas predefinidas. Crea tus rutinas. Al archivarlas, se ocultan de esta lista y se conserva su historial.</p>
+    <label class="small" for="newRoutineName">Nombre de la rutina</label><input id="newRoutineName" maxlength="80" placeholder="Ej. Empujes A">
+    <label class="small" for="newRoutineDescription" style="display:block;margin-top:8px">Descripción (opcional)</label><input id="newRoutineDescription" maxlength="160" placeholder="Ej. Pecho, hombros y tríceps">
+    <button class="btn" style="width:100%;margin-top:10px" onclick="createGymRoutine()">+ Crear rutina</button>
+  </div>
+  <div class="card" id="routineImportCard">
+    <div class="row"><b>📥 Importar rutinas desde Excel</b><span class="tag">XLSX</span></div>
+    <p class="small">Carga un archivo con columnas Día, Nombre de la rutina, Ejercicio, Series y Repeticiones. RENOVA separará cada día en una rutina independiente y conservará los rangos como “8–12”, “30–45 segundos” o “10–20 minutos”.</p>
+    <label for="routineExcelFile" class="small">Selecciona tu archivo Excel</label>
+    <input id="routineExcelFile" type="file" accept=".xlsx,.xls,.csv" onchange="previewRoutineExcel(this.files&&this.files[0])">
+    <div class="small" id="routineImportStatus" role="status" aria-live="polite" style="margin-top:8px">Primero revisaremos el archivo; nada se guarda hasta que confirmes.</div>
+    <div id="routineImportPreview" style="margin-top:10px"></div>
+    <button id="routineImportConfirm" class="btn" style="display:none;width:100%;margin-top:10px" onclick="importRoutineExcel()">Confirmar e importar rutinas</button>
+  </div>
+  <div id="gymRoutineManager"></div><div id="exercises"></div>
+  <div class="card" id="gymSaveCard"><button type="button" class="btn" id="finishGymBtn" style="width:100%" onclick="finishWorkout()">🏁 Terminar entreno</button><button type="button" class="btn secondary" id="saveGymRoutineBtn" style="width:100%;margin-top:8px" onclick="saveGymRoutineToSupabase()">☁️ Guardar ahora</button><div id="gymSaveStatus" class="small" style="margin-top:8px" role="status" aria-live="polite">Las series se guardan solas mientras entrenas.</div></div>
+  <div id="gymSummary"></div>
+  <div class="card"><div class="row"><b>🏆 Mis récords</b><span class="tag">PR</span></div><p class="small">Mejor peso por ejercicio en tus sesiones guardadas, con el 1RM estimado (fórmula de Epley).</p><div id="gymRecords"></div></div>
+</section>
+
+<section id="agenda" class="screen">
+  <h1>Mi agenda</h1><p class="lead">Organiza comida, entrenamiento, descanso y mediciones. Puedes llevarlo a Google Calendar.</p>
+  <div class="card"><div class="row"><b>Google Calendar</b><span class="tag" id="calendarTag">LOCAL</span></div><p class="small">RENOVA solo accederá a Calendar cuando pulses conectar. Podrá consultar y crear eventos en tus calendarios autorizados.</p><div class="two"><button class="btn secondary" onclick="connectCalendar()">📅 Conectar</button><button class="btn" onclick="syncCalendarWeek()">☁️ Enviar semana</button></div><div class="small" style="margin-top:10px"><b>¿Qué enviar a Calendar?</b></div><div class="pill-row" id="calSyncPrefs" style="margin-top:6px"></div><div id="calendarStatus" class="small" style="margin-top:8px"></div></div>
+  <div class="card"><div class="row"><b>Agenda de hoy</b><span class="tag">RENOVA</span></div><div id="todayAgenda" class="agenda-grid" style="margin-top:10px"></div></div>
+  <div class="card"><div class="row"><b>➕ Nueva reunión / evento</b><span class="tag">CALENDAR</span></div>
+    <div class="formgrid" style="margin-top:10px">
+      <div style="grid-column:1/-1"><label class="small">Título</label><input id="eventTitle" placeholder="Ej. Reunión equipo JSA"></div>
+      <div><label class="small">Fecha</label><input id="eventDate" type="date"></div>
+      <div><label class="small">Hora inicio</label><input id="eventStart" type="time" value="08:00" onchange="calcEventTimes()"></div>
+      <div><label class="small">Duración</label><select id="eventDuration" onchange="calcEventTimes()"><option value="30">30 min</option><option value="45">45 min</option><option value="60" selected>1 hora</option><option value="90">1 h 30 min</option><option value="120">2 horas</option><option value="custom">Personalizada</option></select></div>
+      <div id="eventEndWrap" style="display:none"><label class="small">Hora fin</label><input id="eventEnd" type="time" value="09:00"></div>
+      <div style="grid-column:1/-1"><label class="small">Lugar</label><input id="eventLocation" placeholder="Ej. Oficina"></div>
+      <div style="grid-column:1/-1"><label class="small">Invitados (correos separados por coma)</label><input id="eventAttendees" type="text" placeholder="correo@ejemplo.com"></div>
+      <div><label class="small">Recordatorio</label><select id="eventReminder"><option value="10">10 min antes</option><option value="30" selected>30 min antes</option><option value="60">1 hora antes</option><option value="1440">1 día antes</option></select></div>
+      <div><label class="small">Repetición</label><select id="eventRepeat"><option value="none" selected>No repetir</option><option value="weekly">Cada semana</option><option value="monthly">Cada mes</option></select></div>
+      <div style="grid-column:1/-1;display:flex;gap:8px;align-items:center"><input id="eventMeet" type="checkbox" style="width:auto"><label for="eventMeet" class="small">🎥 Crear enlace de Google Meet</label></div>
+      <div style="grid-column:1/-1"><label class="small">Descripción</label><textarea id="eventDescription" rows="3" placeholder="Agenda, temas o notas de la reunión"></textarea></div>
+    </div>
+    <button class="btn" style="width:100%;margin-top:10px" onclick="createCalendarEventFromForm()">📅 Agendar en Google Calendar</button>
+    <div id="eventCreateStatus" class="small" style="margin-top:8px"></div>
+  </div>
+  <div class="card"><b>Próximos eventos de Google Calendar</b><div id="calendarEvents" class="small" style="margin-top:10px"><div class="empty">Conecta Calendar para ver tus próximos eventos.</div></div></div>
+  <div class="card"><b>Horarios personalizables</b><div class="formgrid" style="margin-top:10px"><div><label class="small">Desayuno</label><input id="timeBreakfast" type="time" value="07:00"></div><div><label class="small">Almuerzo</label><input id="timeLunch" type="time" value="13:00"></div><div><label class="small">Entrenamiento</label><input id="timeGym" type="time" value="19:00"></div><div><label class="small">Cena</label><input id="timeDinner" type="time" value="21:15"></div><div><label class="small">Dormir</label><input id="timeSleep" type="time" value="23:00"></div><div><label class="small">Medición semanal</label><input id="timeMeasure" type="time" value="06:00"></div></div><button class="btn secondary" style="width:100%;margin-top:10px" onclick="saveAgendaSettings()">Guardar horarios</button></div>
+</section>
+
+
+<section id="progress" class="screen">
+  <h1>Progreso</h1><p class="lead">Mide tendencia, no un solo número.</p>
+  <div class="card">
+    <div class="formgrid">
+      <div><label class="small">Peso (kg)</label><input id="weight" type="number" step=".1" min="0"></div>
+      <div><label class="small">Cintura (cm)</label><input id="waist" type="number" step=".1" min="0"></div>
+    </div>
+    <button style="width:100%;margin-top:10px" onclick="saveProgress()">Guardar medición</button>
+  </div>
+  <div class="card"><b>Tendencia</b><div id="trend" style="margin-top:10px"></div></div><div class="card"><b>Historial</b><div id="history"></div></div>
+  <div class="card profile-card" id="profileCard" style="display:none">
+    <div class="row"><b>👤 Mi cuenta</b><span class="tag">GOOGLE</span></div>
+    <div class="profile-main" style="margin-top:10px">
+      <div class="profile-avatar" id="profileAvatar">👤</div>
+      <div class="profile-info">
+        <div class="profile-greeting">Hola, <span id="profileName">Alexander</span> 👋</div>
+        <div class="small profile-email" id="profileEmail">Cuenta de Google</div>
+        <div class="profile-status" id="profileStatus">🔐 Sesión activa</div>
+      </div>
+    </div>
+    <div class="profile-actions">
+      <button class="btn secondary" onclick="showAccountInfo()">Detalles</button>
+      <button class="btn secondary" onclick="logoutRenova()">Cerrar sesión</button>
+    </div>
+  </div>
+  <div class="card"><b>Copia de seguridad</b><p class="small">Tus datos viven en la nube (Supabase). Si quieres, descarga además una copia en JSON.</p>
+    <div class="two"><button class="btn secondary" onclick="exportData()">Exportar</button><label class="btn secondary center">Importar<input type="file" accept=".json" onchange="importData(event)" style="display:none"></label></div>
+  </div>
+  <div class="card"><button class="btn danger" style="width:100%" onclick="resetAll()">Borrar datos de este dispositivo</button><p class="small center" style="margin-bottom:0">No borra tu cuenta ni tus datos en la nube.</p></div>
+</section>
+</main>
+
+<nav class="nav" aria-label="Secciones">
+ <button data-tab="home" class="active" onclick="show('home')"><span class="ico">⌂</span>Inicio</button>
+ <button data-tab="check" onclick="show('check')"><span class="ico">✓</span>Hoy</button>
+ <button data-tab="gym" onclick="show('gym')"><span class="ico">🏋</span>Gym</button>
+ <button data-tab="agenda" onclick="show('agenda')"><span class="ico">📅</span>Agenda</button>
+ <button data-tab="progress" onclick="show('progress')"><span class="ico">↗</span>Progreso</button>
+</nav>
+<div id="toast" class="toast"></div>
+<div id="restBar" class="restbar" role="timer" aria-live="off"><span>⏱ Descanso</span><b id="restTime">0:00</b><button type="button" class="btn secondary sm" onclick="addRest(15)">+15 s</button><button type="button" class="btn sm" onclick="stopRest()">Saltar</button></div>
+<dialog id="exDialog" aria-labelledby="exDlgTitle"><form method="dialog" onsubmit="submitExerciseDialog(event)">
+  <h2 id="exDlgTitle" style="margin:0 0 10px;font-size:20px">Nuevo ejercicio</h2>
+  <label class="small" for="exName">Nombre</label><input id="exName" maxlength="80" placeholder="Ej. Press banca" required>
+  <label class="small" for="exGroup" style="display:block;margin-top:8px">Grupo muscular (opcional)</label><input id="exGroup" maxlength="60" placeholder="Ej. Pecho">
+  <div class="formgrid" style="margin-top:8px"><div><label class="small" for="exSets">Series</label><input id="exSets" type="number" inputmode="numeric" min="1" max="20"></div><div><label class="small" for="exRest">Descanso (s)</label><input id="exRest" type="number" inputmode="numeric" min="0" max="900" step="15"></div><div class="full"><label class="small" for="exReps">Repeticiones objetivo</label><input id="exReps" maxlength="30" placeholder="8-12 · 15 · 30-45 segundos"></div></div>
+  <div id="exDlgMsg" class="small" role="alert" style="color:#ff9b9b;margin-top:8px"></div>
+  <div class="two" style="margin-top:12px"><button type="button" class="btn secondary" onclick="closeExerciseDialog()">Cancelar</button><button type="submit" class="btn">Guardar</button></div>
+</form></dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+// =====================================================================
+// RENOVA · capa de datos v2
+// La nube (Supabase) es la fuente principal. localStorage es solo una
+// caché para abrir rápido y trabajar sin conexión. Cada cambio se guarda
+// primero en local y se envía a Supabase mediante una cola que se
+// reintenta sola cuando vuelve la conexión.
+// =====================================================================
+const BASE_KEY='reset12_v5';
+const LEGACY_BUILTIN_TASKS=['Tomé suficiente agua','Cumplí mi proteína del día','Respeté mis 3 comidas','Cumplí mis pasos','Entrené / hice actividad','Dormí lo planificado','Evité picoteos innecesarios','Hice algo positivo por mí'];
+const SUPABASE_URL='https://dniegeedovdakfqfbcay.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_bYBfoTBdUIKryPj1JJiDrg_arYDul2g';
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+const CLIENT_ID='800988810295-el6fi6505u0djs46um3i681qhdlu8pf2.apps.googleusercontent.com';
+const HISTORY_DAYS=120;
+const DEFAULT_AGENDA={breakfast:'07:00',lunch:'13:00',gym:'19:00',dinner:'21:15',sleep:'23:00',measure:'06:00'};
+
+let supabaseUser=null;
+let loadedForUserId=null;
+let habitsCloud=true;        // false si aún no se ejecutó el SQL de la Fase 1
+let measurementsCloud=true;
+let currentUser=null;
+let KEY=BASE_KEY, startKey='reset12_start', queueKey='renova_sync_queue';
+let checklist=[];            // [[habitId, título]] activos
+let exercises=[];            // rutinas de gym
+let data=emptyData();
+
+function emptyData(){return {gymHistory:{},gymDirty:{},gymDone:{},gymStart:{},days:{},measurements:[],xp:0,customHabits:[],checklistItems:[],habitsMigrated:false,gymRoutines:[],gymSelectedRoutineId:null,agenda:{...DEFAULT_AGENDA},shoppingList:[]}}
+function userKey(email,suffix){return suffix+'_'+encodeURIComponent(email.toLowerCase())}
+function lsGet(k){try{return localStorage.getItem(k)}catch{return null}}
+function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){console.warn('RENOVA localStorage',e)}}
+function lsDel(k){try{localStorage.removeItem(k)}catch{}}
+function norm(t){return String(t||'').trim().toLocaleLowerCase('es')}
+function nowIso(){return new Date().toISOString()}
+function uuid(){if(window.crypto?.randomUUID)return crypto.randomUUID();return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return (c==='x'?r:(r&3|8)).toString(16)})}
+function isUuid(v){return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(v))}
+function fmtDate(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function today(){return fmtDate(new Date())}
+function addDays(iso,n){const [y,m,d]=iso.split('-').map(Number);const x=new Date(y,m-1,d);x.setDate(x.getDate()+n);return fmtDate(x)}
+function hhmm(t){return t?String(t).slice(0,5):null}
+function toNumOrNull(v){if(v===undefined||v===null||v==='')return null;const n=Number(v);return Number.isFinite(n)?n:null}
+function toIntOrNull(v){const n=toNumOrNull(v);return n==null?null:Math.round(n)}
+function litersToMl(v){const n=toNumOrNull(v);return n==null?null:Math.round(n*1000)}
+function newDay(){return {checks:{},steps:'',water:'',sleep:'',calories:'',note:'',exercises:{}}}
+function getDay(date=today()){data.days[date] ||= newDay();data.days[date].checks ||= {};data.days[date].exercises ||= {};return data.days[date]}
+function save(){lsSet(KEY,JSON.stringify(data))}   // caché local; la nube va por la cola
+
+function loadUserData(email){
+  const scopedKey=userKey(email,BASE_KEY), scopedStart=userKey(email,'reset12_start');
+  if(!lsGet(scopedKey)){const legacy=lsGet(BASE_KEY);if(legacy)lsSet(scopedKey,legacy);const ls=lsGet('reset12_start');if(ls)lsSet(scopedStart,ls)}
+  KEY=scopedKey;startKey=scopedStart;queueKey=userKey(email,'renova_sync_queue');
+  let loaded=null;try{loaded=JSON.parse(lsGet(KEY)||'null')}catch{}
+  data=Object.assign(emptyData(),loaded&&typeof loaded==='object'?loaded:{});
+  if(!data.days||typeof data.days!=='object')data.days={};
+  ['measurements','customHabits','checklistItems','shoppingList','gymRoutines'].forEach(k=>{if(!Array.isArray(data[k]))data[k]=[]});
+  data.agenda=Object.assign({...DEFAULT_AGENDA},data.agenda||{});
+  checklist=data.checklistItems.filter(x=>Array.isArray(x)&&x[1]).map(x=>[String(x[0]),String(x[1])]);
+  exercises=data.gymRoutines;
+  loadQueue();
+}
+
+// ---------------------------------------------------------------------
+// Cola de sincronización (sobrevive a recargas y a falta de conexión)
+// ---------------------------------------------------------------------
+let syncQueue=[];
+let flushing=false;
+function loadQueue(){try{const q=JSON.parse(lsGet(queueKey)||'[]');syncQueue=Array.isArray(q)?q:[]}catch{syncQueue=[]}}
+function persistQueue(){lsSet(queueKey,JSON.stringify(syncQueue))}
+function isPending(key){return syncQueue.some(o=>o.key===key)}
+// op = {key, t:'upsert'|'update'|'delete'|'replace', table, rows?, onConflict?, values?, match?}
+function cloud(op,noFlush){
+  const i=op.key?syncQueue.findIndex(o=>o.key===op.key):-1;
+  if(i>=0)syncQueue[i]=op; else syncQueue.push(op);   // reemplazo en su lugar: conserva el orden
+  persistQueue();updateSyncPill();
+  if(!noFlush)flushQueue();
+}
+async function runOp(op){
+  const uid=supabaseUser.id;
+  const withUser=rows=>rows.map(r=>({...r,user_id:uid}));
+  const applyMatch=(q,m)=>{for(const [k,v] of Object.entries(m||{}))q=q.eq(k,v);return q};
+  if(op.t==='upsert')return supabaseClient.from(op.table).upsert(withUser(op.rows),{onConflict:op.onConflict});
+  if(op.t==='update')return applyMatch(supabaseClient.from(op.table).update(op.values).eq('user_id',uid),op.match);
+  if(op.t==='delete')return applyMatch(supabaseClient.from(op.table).delete().eq('user_id',uid),op.match);
+  if(op.t==='replace'){const del=await supabaseClient.from(op.table).delete().eq('user_id',uid);if(del.error)return del;if(!op.rows.length)return {error:null};return supabaseClient.from(op.table).insert(withUser(op.rows))}
+  return {error:{code:'LOCAL',message:'Operación desconocida'}};
+}
+function isTransient(err){const m=String(err?.message||'');return !err?.code||['PGRST301','08000','08003','08006','57014'].includes(String(err.code))||/fetch|network|timeout|load failed/i.test(m)}
+async function flushQueue(){
+  if(flushing||!supabaseUser||!navigator.onLine){updateSyncPill();return}
+  flushing=true;updateSyncPill();
+  try{
+    while(syncQueue.length){
+      const op=syncQueue[0];
+      let res;try{res=await runOp(op)}catch(e){res={error:{message:String(e?.message||e)}}}
+      if(res?.error){
+        if(isTransient(res.error))throw res.error;
+        console.error('RENOVA: cambio descartado por la nube',op,res.error);
+        toast('No se pudo guardar en la nube: '+(res.error.message||res.error.code));
+      }
+      syncQueue=syncQueue.filter(x=>x!==op);persistQueue();
+    }
+  }catch(e){console.warn('RENOVA sync pendiente:',e?.message||e)}
+  finally{flushing=false;updateSyncPill()}
+}
+function updateSyncPill(){
+  const e=document.getElementById('syncPill');if(!e)return;const n=syncQueue.length;let t;
+  if(!supabaseUser)t='📱 Solo este dispositivo';
+  else if(!navigator.onLine)t='📴 Sin conexión'+(n?' · '+n+' pendientes':'');
+  else if(n)t='⏳ '+n+' cambio'+(n>1?'s':'')+' por subir';
+  else if(!habitsCloud||!measurementsCloud)t='⚠️ Falta ejecutar el SQL';
+  else t='☁️ Sincronizado';
+  e.textContent=t;
+}
+window.addEventListener('online',()=>flushQueue());
+window.addEventListener('offline',updateSyncPill);
+setInterval(()=>{if(syncQueue.length)flushQueue()},60000);
+
+// Constructores de operaciones
+function queueState(noFlush){cloud({key:'state',t:'upsert',table:'user_app_state',onConflict:'user_id',rows:[{xp:Number(data.xp||0),cycle_start_date:lsGet(startKey)||today(),cycle_duration_days:84,updated_at:nowIso()}]},noFlush)}
+function queueLog(date,noFlush){const d=getDay(date);cloud({key:'log:'+date,t:'upsert',table:'daily_logs',onConflict:'user_id,log_date',rows:[{log_date:date,steps:toIntOrNull(d.steps),water_ml:litersToMl(d.water),sleep_hours:toNumOrNull(d.sleep),calories:toIntOrNull(d.calories),notes:d.note||null,updated_at:nowIso()}]},noFlush)}
+function queuePrefs(noFlush){const a=data.agenda||DEFAULT_AGENDA;cloud({key:'prefs',t:'upsert',table:'user_preferences',onConflict:'user_id',rows:[{breakfast_time:a.breakfast,lunch_time:a.lunch,gym_time:a.gym,dinner_time:a.dinner,sleep_time:a.sleep,measurement_time:a.measure,updated_at:nowIso()}]},noFlush)}
+function queueShop(noFlush){cloud({key:'shop',t:'replace',table:'shopping_list_items',rows:(data.shoppingList||[]).map((name,i)=>({name:String(name),quantity:null,category:null,purchased:false,sort_order:i}))},noFlush)}
+function queueMeasurement(m,noFlush){cloud({key:'meas:'+m.date,t:'upsert',table:'body_measurements',onConflict:'user_id,measured_on',rows:[{measured_on:m.date,weight_kg:m.weight,waist_cm:m.waist,updated_at:nowIso()}]},noFlush)}
+function queueHabit(h,noFlush){cloud({key:'habit:'+h.id,t:'upsert',table:'habit_definitions',onConflict:'id',rows:[{id:h.id,title:h.title,sort_order:h.sort_order||0,is_active:h.is_active!==false,updated_at:nowIso()}]},noFlush)}
+function queueCheck(habitId,date,done,noFlush){const key='chk:'+habitId+':'+date;if(done)cloud({key,t:'upsert',table:'daily_habit_checks',onConflict:'user_id,habit_id,check_date',rows:[{habit_id:habitId,check_date:date,completed:true}]},noFlush);else cloud({key,t:'delete',table:'daily_habit_checks',match:{habit_id:habitId,check_date:date}},noFlush)}
+
+// ---------------------------------------------------------------------
+// Lectura desde la nube + migración de lo que solo existe en este equipo
+// ---------------------------------------------------------------------
+function migrateLocalHabits(all){
+  const byTitle=new Map(all.map(h=>[norm(h.title),h]));
+  const legacy=new Set(LEGACY_BUILTIN_TASKS.map(norm));
+  const sources=[...data.checklistItems.map(x=>({key:String(x[0]),title:String(x[1]||'').trim()})),...data.customHabits.map((t,i)=>({key:'custom_'+i,title:String(t||'').trim()}))];
+  const keyMap={};let order=all.length;
+  for(const s of sources){
+    if(!s.title||legacy.has(norm(s.title)))continue;
+    let h=byTitle.get(norm(s.title));
+    if(!h){h={id:isUuid(s.key)&&!all.some(x=>x.id===s.key)?s.key:uuid(),title:s.title.slice(0,100),sort_order:order++,is_active:true};all.push(h);byTitle.set(norm(h.title),h);queueHabit(h,true)}
+    keyMap[s.key]=String(h.id);
+  }
+  const ids=new Set(all.map(h=>String(h.id)));
+  for(const [date,day] of Object.entries(data.days)){
+    const next={};
+    for(const [k,v] of Object.entries(day.checks||{})){
+      const id=keyMap[k]||(ids.has(k)?k:null);if(!id||!v)continue;
+      next[id]=true;queueCheck(id,date,true,true);
+    }
+    day.checks=next;
+  }
+  data.customHabits=[];data.habitsMigrated=true;
+  return all;
+}
+
+async function pushLocalGymSessions(sessions){
+  const have=new Set(sessions.map(s=>s.session_date+'|'+s.routine_id));
+  const since=addDays(today(),-HISTORY_DAYS);let pushed=0;
+  for(const [date,day] of Object.entries(data.days)){
+    if(date<since)continue;const used=new Set();
+    for(const [k,v] of Object.entries(day.exercises||{})){
+      const m=/^r(.+?)_e(.+)_s(\d+)$/.exec(k);if(!m||!v)continue;
+      if(v.done||(v.kg!==''&&v.kg!=null)||(v.reps!==''&&v.reps!=null))used.add(m[1]);
+    }
+    for(const rid of used){
+      if(have.has(date+'|'+rid))continue;
+      const routine=exercises.find(r=>String(r.id)===rid);if(!routine)continue;
+      try{await saveGymSession(routine,date);have.add(date+'|'+rid);pushed++}catch(e){console.warn('RENOVA migración gym',date,rid,e)}
+    }
+  }
+  return pushed;
+}
+
+async function pullFromCloud(){
+  if(!supabaseUser)return;
+  const uid=supabaseUser.id, since=addDays(today(),-HISTORY_DAYS), q=t=>supabaseClient.from(t);
+  supabaseClient.from('profiles').upsert({id:uid,display_name:currentUser?.name||null,avatar_url:currentUser?.picture||null,timezone:'America/Bogota',updated_at:nowIso()},{onConflict:'id'}).then(r=>{if(r.error)console.warn('RENOVA profiles',r.error)});
+  const [stateR,logsR,prefsR,shopR,routinesR,exR,sessR,habitsR,checksR,measR]=await Promise.all([
+    q('user_app_state').select('*').eq('user_id',uid).maybeSingle(),
+    q('daily_logs').select('*').eq('user_id',uid).gte('log_date',since),
+    q('user_preferences').select('*').eq('user_id',uid).maybeSingle(),
+    q('shopping_list_items').select('*').eq('user_id',uid).order('sort_order'),
+    q('workout_routines').select('*').eq('user_id',uid).eq('is_active',true).order('created_at'),
+    q('routine_exercises').select('*').eq('user_id',uid).order('exercise_order'),
+    q('workout_sessions').select('id,routine_id,session_date,status').eq('user_id',uid).gte('session_date',since),
+    q('habit_definitions').select('id,title,sort_order,is_active,created_at').eq('user_id',uid).order('sort_order').order('created_at'),
+    q('daily_habit_checks').select('habit_id,check_date,completed').eq('user_id',uid).gte('check_date',since),
+    q('body_measurements').select('measured_on,weight_kg,waist_cm').eq('user_id',uid).order('measured_on')
+  ]);
+  const coreErr=[stateR,logsR,prefsR,shopR,routinesR,exR,sessR].find(r=>r.error);
+  if(coreErr)throw coreErr.error;
+  habitsCloud=!habitsR.error&&!checksR.error;
+  measurementsCloud=!measR.error;
+  if(!habitsCloud)console.warn('RENOVA: tablas de hábitos no disponibles (¿falta el SQL?)',habitsR.error||checksR.error);
+  if(!measurementsCloud)console.warn('RENOVA: body_measurements no disponible (¿falta el SQL?)',measR.error);
+
+  // Estado del ciclo y XP: manda la nube, salvo cambios locales aún sin subir
+  if(stateR.data){if(!isPending('state')){data.xp=Number(stateR.data.xp||0);if(stateR.data.cycle_start_date)lsSet(startKey,stateR.data.cycle_start_date)}}
+  else queueState(true);
+
+  // Registro diario
+  const cloudDates=new Set();
+  for(const row of logsR.data||[]){
+    cloudDates.add(row.log_date);if(isPending('log:'+row.log_date))continue;
+    const d=getDay(row.log_date);
+    d.steps=row.steps??'';d.water=row.water_ml!=null?+(Number(row.water_ml)/1000).toFixed(2):'';d.sleep=row.sleep_hours??'';d.calories=row.calories??'';d.note=row.notes??'';
+  }
+  for(const [date,d] of Object.entries(data.days)){
+    if(cloudDates.has(date)||isPending('log:'+date)||date<since)continue;
+    if(['steps','water','sleep','calories','note'].some(k=>d[k]!==''&&d[k]!=null))queueLog(date,true);
+  }
+
+  // Horarios
+  if(prefsR.data){if(!isPending('prefs')){const p=prefsR.data;data.agenda={breakfast:hhmm(p.breakfast_time)||DEFAULT_AGENDA.breakfast,lunch:hhmm(p.lunch_time)||DEFAULT_AGENDA.lunch,gym:hhmm(p.gym_time)||DEFAULT_AGENDA.gym,dinner:hhmm(p.dinner_time)||DEFAULT_AGENDA.dinner,sleep:hhmm(p.sleep_time)||DEFAULT_AGENDA.sleep,measure:hhmm(p.measurement_time)||DEFAULT_AGENDA.measure}}}
+  else queuePrefs(true);
+
+  // Lista de compras
+  if(!isPending('shop')){if((shopR.data||[]).length||!data.shoppingList.length)data.shoppingList=(shopR.data||[]).map(x=>x.name);else queueShop(true)}
+
+  // Hábitos y checks
+  if(habitsCloud){
+    let all=(habitsR.data||[]).map(h=>({...h,id:String(h.id)}));
+    if(!data.habitsMigrated)all=migrateLocalHabits(all);
+    for(const op of syncQueue){if(op.table==='habit_definitions'){const r=op.rows?.[0];if(!r)continue;const h=all.find(x=>x.id===r.id);if(h)Object.assign(h,r);else all.push({...r})}}
+    checklist=all.filter(h=>h.is_active!==false).sort((a,b)=>(a.sort_order||0)-(b.sort_order||0)).map(h=>[String(h.id),String(h.title)]);
+    data.checklistItems=checklist.map(x=>[...x]);
+    const byDate={};for(const c of checksR.data||[])if(c.completed!==false)(byDate[c.check_date] ||= {})[String(c.habit_id)]=true;
+    for(const [date,day] of Object.entries(data.days))if(date>=since)day.checks={};
+    for(const [date,checks] of Object.entries(byDate))getDay(date).checks={...checks};
+    for(const op of syncQueue){const m=/^chk:(.+):(\d{4}-\d{2}-\d{2})$/.exec(op.key||'');if(!m)continue;const day=getDay(m[2]);if(op.t==='delete')delete day.checks[m[1]];else day.checks[m[1]]=true}
+  }
+
+  // Mediciones
+  if(measurementsCloud){
+    const map=new Map((measR.data||[]).map(r=>[r.measured_on,{date:r.measured_on,weight:toNumOrNull(r.weight_kg),waist:toNumOrNull(r.waist_cm)}]));
+    const localByDate=new Map();for(const m of data.measurements||[])if(m&&m.date)localByDate.set(m.date,m);
+    for(const [date,m] of localByDate){if(!map.has(date)){map.set(date,m);queueMeasurement(m,true)}else if(isPending('meas:'+date))map.set(date,m)}
+    data.measurements=[...map.values()].sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);
+  }
+
+  // Gym
+  data.gymRoutines=(routinesR.data||[]).map(r=>({...r,nombre:r.name,grupos:r.description||'',items:(exR.data||[]).filter(e=>e.routine_id===r.id).map(e=>{const meta=parseRoutineNote(e.notes||'');return {id:e.id,nombre:e.exercise_name,grupo:meta.group,series:Number(e.planned_sets||3),reps:meta.target||(e.reps_min&&e.reps_max&&e.reps_min!==e.reps_max?`${e.reps_min}-${e.reps_max}`:String(e.reps_min||8)),descanso:Number(e.rest_seconds||60)}})}));
+  exercises=data.gymRoutines;
+  if(!exercises.some(r=>r.id===data.gymSelectedRoutineId))data.gymSelectedRoutineId=exercises[0]?.id||null;
+  const sessions=sessR.data||[];
+  const pushedSessions=await pushLocalGymSessions(sessions);
+  const todayIds=sessions.filter(s=>s.session_date===today()).map(s=>s.id);
+  if(todayIds.length){
+    const setsR=await q('workout_sets').select('*').eq('user_id',uid).in('session_id',todayIds);
+    if(setsR.error)console.warn('RENOVA workout_sets',setsR.error);
+    else{
+      const exById=new Map((exR.data||[]).map(e=>[e.id,e]));const day=getDay();
+      for(const s of setsR.data||[]){
+        const ex=exById.get(s.routine_exercise_id);const rid=ex?.routine_id||sessions.find(x=>x.id===s.session_id)?.routine_id;
+        const k='r'+rid+'_e'+(s.routine_exercise_id||s.exercise_name)+'_s'+(Number(s.set_number||1)-1);
+        if(!day.exercises[k])day.exercises[k]={kg:s.weight_kg??'',reps:s.reps_completed??'',done:!!s.completed};
+      }
+    }
+  }
+  await loadGymHistory(sessions);
+  save();render();updateSyncPill();
+  await flushQueue();
+  flushGymDirty();
+  return {pushedSessions};
+}
+
+function toast(t){let e=document.getElementById('toast');e.textContent=t;e.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>e.classList.remove('show'),1900)}
+function setProfileStatus(t){const e=document.getElementById('profileStatus');if(e)e.textContent=t}
+function show(id){
+ document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');
+ document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===(id==='food'?'home':id)));
+ window.scrollTo(0,0);
+ render();
+ if(id==='agenda')renderCalendarEvents();
+}
+function render(){
+ const d=getDay();
+ document.getElementById('todayLabel').textContent=new Date().toLocaleDateString('es-CO',{weekday:'long',day:'numeric',month:'long'});
+ const n=checklist.filter(x=>d.checks[x[0]]).length,p=checklist.length?Math.round(n/checklist.length*100):0;
+ document.getElementById('dayPct').textContent=p+'%';document.getElementById('dayBar').style.width=p+'%';
+ document.getElementById('dayNum').textContent=dayIndex()+'/84';
+ document.getElementById('streak').textContent=streak();
+ const last=data.measurements.at(-1);document.getElementById('weightHome').textContent=last?.weight!=null?last.weight+' kg':'—';document.getElementById('waistHome').textContent=last?.waist!=null?last.waist+' cm':'—';
+ document.getElementById('xpPill').textContent=data.xp+' XP · Nivel '+(Math.floor(data.xp/500)+1);
+ document.getElementById('checks').innerHTML=checklist.map(([k,t])=>{const id=escHtml(k);return `<div class="check"><input id="chk_${id}" type="checkbox" ${d.checks[k]?'checked':''} onchange="toggleCheck('${id}',this.checked)"><label for="chk_${id}" class="${d.checks[k]?'done':''}" style="flex:1">${escHtml(t)}</label><button type="button" class="btn danger" style="padding:6px 9px" aria-label="Quitar ${escHtml(t)}" onclick="removeChecklistTask('${id}')">×</button></div>`}).join('')||'<div class="empty">Aún no tienes hábitos. Crea el primero arriba.</div>';
+ ['steps','water','sleep','calories','note'].forEach(k=>document.getElementById(k).value=d[k]??'');
+ document.getElementById('weight').value=last?.weight??'';document.getElementById('waist').value=last?.waist??'';
+ document.getElementById('quote').textContent=dailyQuote();
+ renderExercises();renderHistory();renderTrend();renderMenus();renderShoppingList();renderAgenda();renderCalSyncPrefs();
+}
+const QUOTES=['No necesitas hacerlo perfecto. Necesitas hacerlo hoy.','La disciplina es elegir lo que quieres más sobre lo que quieres ahora.','Un día a la vez. Una serie a la vez.','Lo que repites, te construye.','No negocies contigo: cumple y después descansa.','Constancia sobre perfección.','Hoy suma. Aunque sea poco, suma.','El progreso aburrido es progreso real.','Tu yo de dentro de 84 días te lo va a agradecer.','Hazlo fácil de empezar y difícil de dejar.'];
+function dailyQuote(){return QUOTES[(dayIndex()-1)%QUOTES.length]}
+function openAccount(){show('progress');setTimeout(()=>document.getElementById('profileCard')?.scrollIntoView({behavior:'smooth',block:'start'}),50)}
+function addChecklistTask(){
+ const input=document.getElementById('newChecklistTask'),title=(input.value||'').trim().slice(0,100);
+ if(!title){toast('Escribe el nombre del hábito');input.focus();return}
+ if(checklist.some(x=>norm(x[1])===norm(title))){toast('Ese hábito ya existe');return}
+ const h={id:uuid(),title,sort_order:checklist.length,is_active:true};
+ checklist.push([h.id,h.title]);data.checklistItems=checklist.map(x=>[...x]);
+ if(supabaseUser&&habitsCloud)queueHabit(h);
+ input.value='';save();render();toast('Hábito creado')
+}
+function removeChecklistTask(key){
+ const i=checklist.findIndex(x=>x[0]===key);if(i<0)return;const task=checklist[i];
+ if(!confirm('¿Quitar el hábito “'+task[1]+'” de tu lista? Su historial se conserva.'))return;
+ checklist.splice(i,1);data.checklistItems=checklist.map(x=>[...x]);
+ if(supabaseUser&&habitsCloud)queueHabit({id:key,title:task[1],sort_order:i,is_active:false});
+ save();render();toast('Hábito quitado')
+}
+function toggleCheck(k,v){
+ const date=today(),d=getDay(date);if(!!d.checks[k]===v)return;
+ if(v)d.checks[k]=true;else delete d.checks[k];
+ data.xp=Math.max(0,Number(data.xp||0)+(v?25:-25));save();
+ if(supabaseUser&&habitsCloud&&isUuid(k))queueCheck(k,date,v,true);
+ if(supabaseUser)queueState();
+ render();toast(v?'✓ Hecho · +25 XP':'Marcado como pendiente')
+}
+function saveDay(){const date=today(),d=getDay(date);['steps','water','sleep','calories','note'].forEach(k=>d[k]=document.getElementById(k).value);save();if(supabaseUser)queueLog(date);toast('Día guardado');render()}
+let pendingRoutineImport=null;
+function normalizeRoutineHeader(value){return String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim()}
+function parseRoutineNote(note){const text=String(note||'');if(text.startsWith('__RENOVA_IMPORT__|')){const bits=text.split('|');return {target:bits[1]||'',group:bits.slice(2).join('|')||''}}return {target:'',group:text}}
+function repsBounds(value){const raw=String(value??'').trim();const nums=raw.match(/\d+(?:[.,]\d+)?/g)||[];if(!nums.length)return null;const a=Number(nums[0].replace(',','.')),b=Number((nums[1]||nums[0]).replace(',','.'));if(!Number.isFinite(a)||!Number.isFinite(b)||a<0||b<a)return null;return {min:Math.round(a),max:Math.round(b),raw:raw.replace(/[–—]/g,'-')}}
+function readRoutineRows(rows){if(!rows.length)throw new Error('El archivo no tiene filas para importar.');const headers=Object.keys(rows[0]||{}),map={};headers.forEach(h=>{const k=normalizeRoutineHeader(h);if(['dia','dia entrenamiento','dia de entrenamiento'].includes(k))map.day=h;else if(['nombre de la rutina','rutina','nombre rutina'].includes(k))map.routine=h;else if(['ejercicio','nombre del ejercicio'].includes(k))map.exercise=h;else if(['series','cantidad de series'].includes(k))map.sets=h;else if(['repeticiones','reps','rango de repeticiones'].includes(k))map.reps=h;else if(['grupo muscular','grupo'].includes(k))map.group=h;else if(['descanso','descanso segundos','descanso seg'].includes(k))map.rest=h;});const missing=['day','routine','exercise','sets','reps'].filter(k=>!map[k]);if(missing.length)throw new Error('Faltan columnas obligatorias: '+missing.map(k=>({day:'Día',routine:'Nombre de la rutina',exercise:'Ejercicio',sets:'Series',reps:'Repeticiones'}[k])).join(', '));const parsed=[];rows.forEach((row,i)=>{const vals=[row[map.day],row[map.routine],row[map.exercise],row[map.sets],row[map.reps]];if(vals.every(v=>String(v??'').trim()===''))return;if(String(row[map.exercise]??'').trim()===''&&String(row[map.sets]??'').trim()===''&&String(row[map.reps]??'').trim()==='')return;if(vals.slice(0,3).some(v=>String(v??'').trim()===''))throw new Error('Fila '+(i+2)+': Día, nombre de rutina y ejercicio son obligatorios.');const day=String(row[map.day]).trim(),routine=String(row[map.routine]).trim(),exercise=String(row[map.exercise]).trim(),sets=Number(String(row[map.sets]).trim().replace(',','.')),target=repsBounds(row[map.reps]);if(!Number.isInteger(sets)||sets<1||sets>20)throw new Error('Fila '+(i+2)+': las series deben ser un número entero entre 1 y 20.');if(!target)throw new Error('Fila '+(i+2)+': revisa las repeticiones de “'+exercise+'”.');const dayMatch=day.match(/\d+/);const dayNumber=dayMatch?Number(dayMatch[0]):parsed.length+1;const rest=map.rest&&String(row[map.rest]??'').trim()!==''?Number(String(row[map.rest]).replace(',','.')):60;if(!Number.isFinite(rest)||rest<0||rest>3600)throw new Error('Fila '+(i+2)+': descanso inválido.');parsed.push({day,dayNumber,routine,exercise,sets,target,group:map.group?String(row[map.group]??'').trim():'',rest});});if(!parsed.length)throw new Error('No encontré ejercicios válidos en el Excel.');const grouped=new Map();for(const row of parsed){const key=row.day.toLocaleLowerCase('es')+'|'+row.routine.toLocaleLowerCase('es');if(!grouped.has(key))grouped.set(key,{day:row.day,dayNumber:row.dayNumber,routine:row.routine,items:[]});grouped.get(key).items.push(row)}return [...grouped.values()]}
+async function previewRoutineExcel(file){const status=document.getElementById('routineImportStatus'),preview=document.getElementById('routineImportPreview'),confirmBtn=document.getElementById('routineImportConfirm');pendingRoutineImport=null;confirmBtn.style.display='none';preview.innerHTML='';if(!file){status.textContent='Selecciona un archivo Excel.';return}try{if(!window.XLSX)throw new Error('No se pudo cargar el lector de Excel. Comprueba tu conexión y vuelve a intentarlo.');const buffer=await file.arrayBuffer(),wb=XLSX.read(buffer,{type:'array'}),sheet=wb.Sheets[wb.SheetNames[0]],rows=XLSX.utils.sheet_to_json(sheet,{defval:'',raw:false});const groups=readRoutineRows(rows);const exerciseCount=groups.reduce((n,g)=>n+g.items.length,0);const existingNames=new Set((exercises||[]).map(r=>String(r.nombre||r.name||'').trim().toLocaleLowerCase('es')));const duplicates=groups.filter(g=>existingNames.has((g.day+' — '+g.routine).trim().toLocaleLowerCase('es'))||existingNames.has(g.routine.toLocaleLowerCase('es')));if(duplicates.length)throw new Error('Ya existe una rutina con este nombre: '+duplicates.map(g=>g.day+' — '+g.routine).join(', ')+'. Para evitar duplicados, no se importó nada.');pendingRoutineImport={fileName:file.name,groups};status.textContent=`Archivo válido: ${groups.length} días/rutinas y ${exerciseCount} ejercicios. Descanso predeterminado: 60 segundos si no viene en el Excel.`;preview.innerHTML='<div class="card" style="margin:0"><b>Vista previa</b>'+groups.map(g=>`<div style="border-top:1px solid var(--line);padding:10px 0;margin-top:8px"><b>${escHtml(g.day)} · ${escHtml(g.routine)}</b><div class="small">${g.items.length} ejercicios</div>${g.items.map((e,i)=>`<div class="small" style="padding:3px 0">${i+1}. ${escHtml(e.exercise)} · ${e.sets} series · ${escHtml(e.target.raw)}</div>`).join('')}</div>`).join('')+'</div>';confirmBtn.style.display='block'}catch(err){status.textContent='No se puede importar: '+err.message;pendingRoutineImport=null;confirmBtn.style.display='none';preview.innerHTML='<div class="small" style="color:#ff8a8a">Corrige el archivo o revisa sus columnas y vuelve a seleccionarlo.</div>'}}
+async function importRoutineExcel(){const status=document.getElementById('routineImportStatus'),btn=document.getElementById('routineImportConfirm');if(!pendingRoutineImport)return;if(!supabaseUser){status.textContent='Inicia sesión antes de importar para guardar las rutinas en tu cuenta.';return}if(!confirm(`Se crearán ${pendingRoutineImport.groups.length} rutinas y ${pendingRoutineImport.groups.reduce((n,g)=>n+g.items.length,0)} ejercicios en Supabase. No se borrará ni modificará el historial. ¿Continuar?`))return;btn.disabled=true;btn.textContent='Importando…';const createdRoutineIds=[];try{for(const g of pendingRoutineImport.groups){const name=`${g.day} — ${g.routine}`;const ins=await supabaseClient.from('workout_routines').insert({user_id:supabaseUser.id,name,description:g.routine,is_active:true}).select('*').single();if(ins.error)throw new Error('No se pudo crear “'+name+'”: '+ins.error.message);createdRoutineIds.push(ins.data.id);g.createdRoutine=ins.data;}
+const exerciseRows=[];pendingRoutineImport.groups.forEach(g=>g.items.forEach((e,i)=>exerciseRows.push({user_id:supabaseUser.id,routine_id:g.createdRoutine.id,day_number:g.dayNumber,exercise_name:e.exercise,exercise_order:i+1,planned_sets:e.sets,reps_min:e.target.min,reps_max:e.target.max,rest_seconds:e.rest,notes:'__RENOVA_IMPORT__|'+e.target.raw+'|'+e.group})));const insEx=await supabaseClient.from('routine_exercises').insert(exerciseRows).select('*');if(insEx.error)throw new Error('No se pudieron guardar los ejercicios: '+insEx.error.message);const byRoutine=new Map();for(const e of insEx.data||[]){if(!byRoutine.has(e.routine_id))byRoutine.set(e.routine_id,[]);const meta=parseRoutineNote(e.notes);byRoutine.get(e.routine_id).push({id:e.id,nombre:e.exercise_name,grupo:meta.group,series:Number(e.planned_sets||3),reps:meta.target||`${e.reps_min}-${e.reps_max}`,descanso:Number(e.rest_seconds||60)})}for(const g of pendingRoutineImport.groups){const row=g.createdRoutine;exercises.push({...row,nombre:row.name,grupos:row.description||'',items:byRoutine.get(row.id)||[]})}data.gymRoutines=exercises;data.gymSelectedRoutineId=pendingRoutineImport.groups[0].createdRoutine.id;save();renderExercises();status.textContent=`Importación completada: ${pendingRoutineImport.groups.length} rutinas y ${exerciseRows.length} ejercicios guardados en Supabase.`;document.getElementById('routineImportPreview').innerHTML='';document.getElementById('routineExcelFile').value='';pendingRoutineImport=null;btn.style.display='none';toast('Rutinas importadas correctamente')}catch(err){console.error('RENOVA importación Excel:',err);let rollbackOk=true;for(const id of createdRoutineIds.reverse()){const del=await supabaseClient.from('workout_routines').delete().eq('user_id',supabaseUser.id).eq('id',id);if(del.error)rollbackOk=false}status.textContent='Falló la importación: '+err.message+(rollbackOk?' Se revirtieron las rutinas creadas en este intento.':' No se pudo revertir todo automáticamente; revisa Supabase antes de volver a importar.');}finally{btn.disabled=false;btn.textContent='Confirmar e importar rutinas'}}
+function selectGymDay(value){data.gymSelectedRoutineId=value||null;save();renderExercises()}
+async function createGymRoutine(){const name=(document.getElementById('newRoutineName').value||'').trim(),description=(document.getElementById('newRoutineDescription').value||'').trim();if(!name){toast('Escribe el nombre de la rutina');return}if(exercises.some(r=>String(r.name||r.nombre).trim().toLowerCase()===name.toLowerCase())){toast('Ya tienes una rutina con ese nombre');return}if(!supabaseUser){toast('Inicia sesión para guardar tus rutinas en Supabase');return}const res=await supabaseClient.from('workout_routines').insert({user_id:supabaseUser.id,name,description,is_active:true}).select('*').single();if(res.error){toast('No se pudo crear la rutina: '+res.error.message);return}const r={...res.data,nombre:res.data.name,grupos:res.data.description||'',items:[]};exercises.push(r);data.gymRoutines=exercises;data.gymSelectedRoutineId=r.id;document.getElementById('newRoutineName').value='';document.getElementById('newRoutineDescription').value='';save();renderExercises();toast('Rutina creada')}
+async function duplicateGymRoutine(id){const original=exercises.find(r=>r.id===id);if(!original)return;const name=prompt('Nombre de la copia',String(original.nombre||original.name)+' (copia)');if(!name||!name.trim())return;if(exercises.some(r=>String(r.nombre||r.name).trim().toLowerCase()===name.trim().toLowerCase())){toast('Ya existe una rutina con ese nombre');return}const res=await supabaseClient.from('workout_routines').insert({user_id:supabaseUser.id,name:name.trim(),description:original.grupos||original.description||'',is_active:true}).select('*').single();if(res.error){toast('Error duplicando rutina: '+res.error.message);return}const copy={...res.data,nombre:res.data.name,grupos:res.data.description||'',items:[]};for(let i=0;i<(original.items||[]).length;i++){const e=original.items[i];const ins=await supabaseClient.from('routine_exercises').insert({user_id:supabaseUser.id,routine_id:copy.id,day_number:1,exercise_name:e.nombre,exercise_order:i+1,planned_sets:e.series,reps_min:Number((String(e.reps).match(/\d+/)||['8'])[0]),reps_max:Number((String(e.reps).match(/\d+/g)||['12']).slice(-1)[0]),rest_seconds:e.descanso,notes:e.grupo}).select('*').single();if(ins.error){toast('Rutina copiada parcialmente: '+ins.error.message);return}copy.items.push({id:ins.data.id,nombre:ins.data.exercise_name,grupo:ins.data.notes||'',series:ins.data.planned_sets,reps:String(ins.data.reps_min||8)+'-'+String(ins.data.reps_max||12),descanso:ins.data.rest_seconds||60})}exercises.push(copy);data.gymRoutines=exercises;data.gymSelectedRoutineId=copy.id;renderExercises();toast('Rutina duplicada')}
+async function editGymRoutine(id){const r=exercises.find(x=>x.id===id);if(!r)return;const name=(prompt('Nombre de la rutina',r.nombre||r.name)||'').trim();if(!name)return;const description=(prompt('Descripción',r.grupos||r.description||'')||'').trim();if(exercises.some(x=>x.id!==id&&String(x.nombre||x.name).trim().toLowerCase()===name.toLowerCase())){toast('Ya existe una rutina con ese nombre');return}const res=await supabaseClient.from('workout_routines').update({name,description}).eq('user_id',supabaseUser.id).eq('id',id);if(res.error){toast('No se pudo editar: '+res.error.message);return}r.name=r.nombre=name;r.description=r.grupos=description;data.gymRoutines=exercises;renderExercises();toast('Rutina actualizada')}
+async function deleteGymRoutine(id){
+  const r=exercises.find(x=>x.id===id);
+  if(!r)return;
+  if(!confirm('¿Quitar la rutina “'+(r.nombre||r.name)+'” de tus rutinas activas? Se archivará en lugar de borrarse para proteger el historial de sesiones y series.'))return;
+  const result=await supabaseClient.from('workout_routines').update({is_active:false}).eq('user_id',supabaseUser.id).eq('id',id);
+  if(result.error){toast('No se pudo archivar la rutina: '+result.error.message);return}
+  exercises=exercises.filter(x=>x.id!==id);
+  data.gymRoutines=exercises;
+  data.gymSelectedRoutineId=exercises[0]?.id||null;
+  save();
+  renderExercises();
+  toast('Rutina archivada; el historial se conserva');
+}
+async function removeExerciseFromRoutine(rid,eid){const r=exercises.find(x=>x.id===rid);if(!r||!confirm('¿Eliminar este ejercicio de la rutina?'))return;const del=await supabaseClient.from('routine_exercises').delete().eq('user_id',supabaseUser.id).eq('id',eid);if(del.error){toast('No se pudo eliminar el ejercicio');return}r.items=r.items.filter(e=>e.id!==eid);r.items.forEach((e,i)=>{e.order=i+1});data.gymRoutines=exercises;renderExercises()}
+async function saveGymSession(routine,date,status){
+  const uid=supabaseUser.id;
+  let sr=await supabaseClient.from('workout_sessions').select('id').eq('user_id',uid).eq('session_date',date).eq('routine_id',routine.id).limit(1).maybeSingle();
+  if(sr.error)throw sr.error;
+  let sessionId=sr.data?.id;
+  if(sessionId&&status){const up=await supabaseClient.from('workout_sessions').update({status}).eq('user_id',uid).eq('id',sessionId);if(up.error)throw up.error}
+  if(!sessionId){
+    sr=await supabaseClient.from('workout_sessions').insert({user_id:uid,routine_id:routine.id,session_date:date,status:status||(date<today()?'completed':'in_progress'),started_at:new Date().toISOString()}).select('id').single();
+    if(sr.error)throw sr.error;sessionId=sr.data.id;
+  }
+  const day=getDay(date),sets=[];
+  (routine.items||[]).forEach(ex=>{const base='r'+routine.id+'_e'+ex.id;for(let n=0;n<ex.series;n++){const sv=day.exercises?.[base+'_s'+n]||{};sets.push({user_id:uid,session_id:sessionId,routine_exercise_id:ex.id,exercise_name:ex.nombre,set_number:n+1,weight_kg:toNumOrNull(sv.kg),reps_completed:toNumOrNull(sv.reps),completed:!!sv.done,rest_seconds:ex.descanso})}});
+  const del=await supabaseClient.from('workout_sets').delete().eq('user_id',uid).eq('session_id',sessionId);if(del.error)throw del.error;
+  if(sets.length){const ins=await supabaseClient.from('workout_sets').insert(sets);if(ins.error)throw ins.error}
+  return sets.length;
+}
+async function saveGymRoutineToSupabase(){const status=document.getElementById('gymSaveStatus');if(!supabaseUser){toast('Inicia sesión primero');return}const routine=exercises.find(r=>r.id===data.gymSelectedRoutineId)||exercises[0];if(!routine){toast('Crea una rutina primero');return}try{const n=await saveGymSession(routine,today(),data.gymDone?.[today()+'|'+routine.id]?'completed':null);if(data.gymDirty)delete data.gymDirty[today()+'|'+routine.id];save();if(status)status.textContent='☁️ Sesión guardada: '+today()+' · '+n+' series';toast('Sesión guardada')}catch(e){console.error(e);if(status)status.textContent='No se pudo guardar (queda en este teléfono): '+(e.message||e);toast('No se pudo guardar la sesión')}}
+// =====================================================================
+// RENOVA · Gym v3: descanso, última vez, récords, autoguardado y cierre
+// =====================================================================
+function exKey(name){return norm(name).normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,' ')}
+function e1rm(kg,reps){kg=Number(kg);reps=Number(reps);if(!(kg>0)||!(reps>0))return 0;return kg*(1+Math.min(reps,15)/30)}
+function fmtKg(v){const n=Number(v);return Number.isInteger(n)?String(n):n.toFixed(1)}
+function shortDate(iso){const [y,m,d]=iso.split('-').map(Number);return new Date(y,m-1,d).toLocaleDateString('es-CO',{day:'numeric',month:'short'})}
+function setStateFor(routine,item,n,date=today()){return getDay(date).exercises?.['r'+routine.id+'_e'+item.id+'_s'+n]||{}}
+
+// ---- Historial (sesiones anteriores a hoy), por nombre de ejercicio
+async function loadGymHistory(sessions){
+  const uid=supabaseUser.id;
+  const past=sessions.filter(s=>s.session_date<today()).sort((a,b)=>a.session_date<b.session_date?1:-1).slice(0,80);
+  const dateBySession=new Map(past.map(s=>[s.id,s.session_date]));
+  const rows=[];
+  for(let i=0;i<past.length;i+=25){
+    const ids=past.slice(i,i+25).map(s=>s.id);
+    const r=await supabaseClient.from('workout_sets').select('session_id,exercise_name,set_number,weight_kg,reps_completed,completed').eq('user_id',uid).in('session_id',ids);
+    if(r.error){console.warn('RENOVA historial gym',r.error);return}
+    rows.push(...(r.data||[]));
+  }
+  const hist={};
+  for(const s of rows){
+    const date=dateBySession.get(s.session_id);if(!date)continue;
+    const k=exKey(s.exercise_name);const list=(hist[k] ||= []);
+    let entry=list.find(e=>e.date===date);if(!entry){entry={date,name:s.exercise_name,sets:[]};list.push(entry)}
+    entry.sets.push({n:Number(s.set_number||1),kg:toNumOrNull(s.weight_kg),reps:toNumOrNull(s.reps_completed),done:!!s.completed});
+  }
+  for(const list of Object.values(hist)){list.sort((a,b)=>a.date<b.date?1:-1);list.forEach(e=>e.sets.sort((a,b)=>a.n-b.n))}
+  data.gymHistory=hist;
+}
+function lastTime(name){const list=(data.gymHistory||{})[exKey(name)]||[];return list.find(e=>e.sets.some(s=>s.done||s.kg!=null))||null}
+function bestFromHistory(name){
+  let best=null,top=0;
+  for(const e of (data.gymHistory||{})[exKey(name)]||[])for(const s of e.sets){
+    if(!s.done||!(s.kg>0)||!(s.reps>0))continue;
+    top=Math.max(top,e1rm(s.kg,s.reps));
+    if(!best||s.kg>best.kg||(s.kg===best.kg&&s.reps>best.reps))best={kg:s.kg,reps:s.reps,date:e.date};
+  }
+  return best?{...best,e1:top}:null;
+}
+function isPR(name,kg,reps){
+  kg=Number(kg);reps=Number(reps);if(!(kg>0)||!(reps>0))return false;
+  const b=bestFromHistory(name);if(!b)return false;   // la primera vez no cuenta como récord
+  return kg>b.kg||e1rm(kg,reps)>b.e1+0.01;
+}
+
+// ---- Temporizador de descanso (basado en hora real: sigue bien aunque se re-renderice)
+let restEndsAt=0,restTick=null,audioCtx=null;
+function beep(){try{audioCtx ||= new (window.AudioContext||window.webkitAudioContext)();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.frequency.value=880;g.gain.setValueAtTime(.18,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.5);o.connect(g).connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+.5)}catch{}}
+function startRest(seconds){
+  seconds=Math.max(0,Number(seconds)||0);if(!seconds)return;
+  restEndsAt=Date.now()+seconds*1000;
+  try{audioCtx ||= new (window.AudioContext||window.webkitAudioContext)();audioCtx.resume?.()}catch{}
+  document.getElementById('restBar').classList.add('show');document.body.classList.add('resting');
+  clearInterval(restTick);restTick=setInterval(updateRest,250);updateRest();
+}
+function addRest(sec){if(restEndsAt)restEndsAt+=sec*1000;updateRest()}
+function stopRest(){clearInterval(restTick);restTick=null;restEndsAt=0;document.getElementById('restBar').classList.remove('show');document.body.classList.remove('resting')}
+function updateRest(){
+  const left=Math.max(0,Math.ceil((restEndsAt-Date.now())/1000));
+  const el=document.getElementById('restTime');if(el)el.textContent=Math.floor(left/60)+':'+String(left%60).padStart(2,'0');
+  if(left<=0&&restEndsAt){stopRest();if(navigator.vibrate)navigator.vibrate([200,100,200]);beep();toast('⏱ ¡Descanso terminado! A la siguiente serie')}
+}
+
+// ---- Render de la sesión
+function renderExercises(){
+  const manager=document.getElementById('gymRoutineManager'),host=document.getElementById('exercises');if(!manager||!host)return;
+  const list=exercises||[];let routine=list.find(r=>r.id===data.gymSelectedRoutineId)||list[0]||null;
+  if(!routine){manager.innerHTML='<div class="card empty">Aún no tienes rutinas. Crea una o impórtalas desde Excel.</div>';host.innerHTML='';document.getElementById('gymSaveCard').style.display='none';renderRecords();return}
+  data.gymSelectedRoutineId=routine.id;const rid=escHtml(routine.id);
+  const doneKey=today()+'|'+routine.id,finished=!!data.gymDone?.[doneKey];
+  manager.innerHTML=`<div class="card"><label for="gymDaySelector"><b>¿Qué día vas a entrenar?</b></label><select id="gymDaySelector" onchange="selectGymDay(this.value)" style="margin-top:8px">${list.map(r=>`<option value="${escHtml(r.id)}" ${r.id===routine.id?'selected':''}>${data.gymDone?.[today()+'|'+r.id]?'✅ ':''}${escHtml(r.nombre||r.name)}</option>`).join('')}</select><div class="two" style="margin-top:10px"><button class="btn secondary" onclick="openExerciseDialog('${rid}')">+ Ejercicio</button><button class="btn secondary" onclick="editGymRoutine('${rid}')">Editar nombre</button><button class="btn secondary" onclick="duplicateGymRoutine('${rid}')">Duplicar día</button><button class="btn danger" onclick="deleteGymRoutine('${rid}')">Archivar día</button></div></div>`;
+  document.getElementById('gymSaveCard').style.display='block';
+  const items=routine.items||[];let doneSets=0,totalSets=0,volume=0;
+  const cards=items.map((item,i)=>{
+    const last=lastTime(item.nombre),best=bestFromHistory(item.nombre);
+    const sets=Array.from({length:item.series},(_,n)=>{
+      const k='r'+routine.id+'_e'+item.id+'_s'+n,sv=getDay().exercises[k]||{},prev=last?.sets.find(s=>s.n===n+1);
+      totalSets++;if(sv.done){doneSets++;volume+=(Number(sv.kg)||0)*(Number(sv.reps)||0)}
+      const pr=sv.done&&isPR(item.nombre,sv.kg,sv.reps);
+      const ek=escHtml(k);
+      return `<div class="setrow${sv.done?' isdone':''}"><label class="setchk"><input type="checkbox" aria-label="Serie ${n+1} hecha" ${sv.done?'checked':''} onchange="gymSet('${ek}','done',this.checked)"><span>${n+1}</span></label><input type="number" inputmode="decimal" min="0" step="0.5" aria-label="Peso serie ${n+1}" value="${sv.kg??''}" placeholder="${prev?.kg!=null?fmtKg(prev.kg):'kg'}" onchange="gymSet('${ek}','kg',this.value)"><input type="number" inputmode="numeric" min="0" step="1" aria-label="Repeticiones serie ${n+1}" value="${sv.reps??''}" placeholder="${prev?.reps!=null?prev.reps:'reps'}" onchange="gymSet('${ek}','reps',this.value)"><span class="prbadge">${pr?'🏆 PR':''}</span></div>`;
+    }).join('');
+    const lastTxt=last?`<div class="lastline">↺ Última vez (${shortDate(last.date)}): ${last.sets.filter(s=>s.kg!=null||s.reps!=null).map(s=>`${s.kg!=null?fmtKg(s.kg):'–'}×${s.reps??'–'}`).join(' · ')}</div>`:'<div class="lastline">↺ Primera vez con este ejercicio</div>';
+    const bestTxt=best?`<div class="lastline">🏆 Récord: ${fmtKg(best.kg)} kg × ${best.reps} · 1RM est. ${Math.round(best.e1)} kg</div>`:'';
+    return `<div class="exercise"><div class="row"><b>${i+1}. ${escHtml(item.nombre)}</b><div class="row" style="gap:6px"><button class="btn secondary sm" onclick="openExerciseDialog('${rid}','${escHtml(item.id)}')">Editar</button><button class="btn danger sm" aria-label="Quitar ejercicio" onclick="removeExerciseFromRoutine('${rid}','${escHtml(item.id)}')">×</button></div></div><div class="small">${item.grupo?escHtml(item.grupo)+' · ':''}objetivo ${escHtml(item.reps)} · descanso ${item.descanso||0}s · ${item.series} series</div>${lastTxt}${bestTxt}<div class="sethead"><span>✓</span><span>kg</span><span>reps</span><span></span></div>${sets}</div>`;
+  }).join('');
+  const pct=totalSets?Math.round(doneSets/totalSets*100):0;
+  host.innerHTML=`<div class="card"><div class="row"><b>Sesión: ${escHtml(routine.nombre||routine.name)}</b><span class="tag">${finished?'✅ TERMINADA':doneSets+'/'+totalSets+' series'}</span></div><div class="progress" style="margin-top:10px"><div class="bar" style="width:${pct}%"></div></div><p class="small" style="margin-bottom:0">Al marcar una serie arranca el descanso. Si dejas el peso vacío se usa el de la última vez. Volumen hoy: <b>${Math.round(volume).toLocaleString('es-CO')} kg</b></p></div>${cards||'<div class="empty">Este día aún no tiene ejercicios. Usa “+ Ejercicio” para añadir el primero.</div>'}`;
+  const fb=document.getElementById('finishGymBtn');if(fb){fb.textContent=finished?'✅ Entreno terminado · actualizar':'🏁 Terminar entreno';}
+  renderRecords();
+}
+function renderRecords(){
+  const e=document.getElementById('gymRecords');if(!e)return;
+  const names=new Map();
+  for(const r of exercises||[])for(const it of r.items||[])names.set(exKey(it.nombre),it.nombre);
+  for(const k of Object.keys(data.gymHistory||{}))if(!names.has(k))names.set(k,(data.gymHistory[k][0]?.name)||k);
+  const rows=[...names.entries()].map(([k,n])=>({n,b:bestFromHistory(n)})).filter(x=>x.b).sort((a,b)=>b.b.e1-a.b.e1);
+  e.innerHTML=rows.length?rows.map(x=>`<div class="check"><span style="flex:1"><b>${escHtml(x.n)}</b><br><span class="small">${fmtKg(x.b.kg)} kg × ${x.b.reps} · ${shortDate(x.b.date)}</span></span><span class="tag" style="flex:none">1RM ${Math.round(x.b.e1)}</span></div>`).join(''):'<div class="empty">Tus récords aparecerán después de tu primera sesión guardada.</div>';
+}
+
+// ---- Cambios en series
+function gymSet(key,field,value){
+  const day=getDay();const sv=(day.exercises[key] ||= {});
+  const m=/^r(.+?)_e(.+)_s(\d+)$/.exec(key);
+  const routine=m&&exercises.find(r=>String(r.id)===m[1]);const item=routine?.items.find(x=>String(x.id)===m[2]);
+  sv[field]=value;
+  if(routine){data.gymStart ||= {};data.gymStart[today()+'|'+routine.id] ||= nowIso()}
+  if(field==='done'&&value&&item){
+    const prev=lastTime(item.nombre)?.sets.find(s=>s.n===Number(m[3])+1);
+    if((sv.kg===''||sv.kg==null)&&prev?.kg!=null)sv.kg=prev.kg;
+    if((sv.reps===''||sv.reps==null)&&prev?.reps!=null)sv.reps=prev.reps;
+    if(isPR(item.nombre,sv.kg,sv.reps)){toast('🏆 ¡Nuevo récord en '+item.nombre+'!');if(navigator.vibrate)navigator.vibrate([80,60,80,60,200])}
+    startRest(item.descanso);
+  }
+  save();renderExercises();
+  if(routine)markGymDirty(routine.id);
+}
+function gymExercise(key,field,value){gymSet(key,field,value)}
+
+// ---- Autoguardado en la nube (con reintento si no hay señal)
+let gymSaveTimer=null,gymFlushing=false;
+function setGymStatus(t){const e=document.getElementById('gymSaveStatus');if(e)e.textContent=t}
+function markGymDirty(rid,date=today()){data.gymDirty ||= {};data.gymDirty[date+'|'+rid]=true;save();setGymStatus('⏳ Cambios guardados en el teléfono…');clearTimeout(gymSaveTimer);gymSaveTimer=setTimeout(flushGymDirty,2500)}
+async function flushGymDirty(){
+  if(gymFlushing||!supabaseUser)return;
+  const keys=Object.keys(data.gymDirty||{});if(!keys.length)return;
+  if(!navigator.onLine){setGymStatus('📴 Sin conexión: la sesión se subirá al volver la señal');return}
+  gymFlushing=true;
+  try{
+    for(const k of keys){
+      const [date,rid]=k.split('|');const routine=exercises.find(r=>String(r.id)===rid);
+      if(!routine){delete data.gymDirty[k];continue}
+      try{await saveGymSession(routine,date,data.gymDone?.[k]?'completed':null);delete data.gymDirty[k];save();setGymStatus('☁️ Sesión guardada automáticamente · '+new Date().toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'}))}
+      catch(e){console.warn('RENOVA autoguardado gym',e);setGymStatus('⏳ Guardado en el teléfono; se subirá al volver la señal');break}
+    }
+  }finally{gymFlushing=false}
+}
+window.addEventListener('online',()=>flushGymDirty());
+
+// ---- Terminar entreno
+async function finishWorkout(){
+  const routine=exercises.find(r=>r.id===data.gymSelectedRoutineId)||exercises[0];if(!routine)return;
+  const key=today()+'|'+routine.id;let done=0,total=0,volume=0;const prs=[];
+  for(const it of routine.items||[])for(let n=0;n<it.series;n++){total++;const sv=setStateFor(routine,it,n);if(sv.done){done++;volume+=(Number(sv.kg)||0)*(Number(sv.reps)||0);if(isPR(it.nombre,sv.kg,sv.reps)&&!prs.includes(it.nombre))prs.push(it.nombre)}}
+  if(!done&&!confirm('No has marcado ninguna serie. ¿Terminar igual?'))return;
+  const first=!data.gymDone?.[key];
+  data.gymDone ||= {};data.gymDone[key]=true;
+  if(first){data.xp=Number(data.xp||0)+50;if(supabaseUser)queueState()}
+  stopRest();save();
+  const start=data.gymStart?.[key];const mins=start?Math.max(1,Math.round((Date.now()-new Date(start).getTime())/60000)):null;
+  const sum=document.getElementById('gymSummary');
+  sum.innerHTML=`<div class="card summary"><div class="row"><b>🏁 Entreno terminado</b><span class="tag">${first?'+50 XP':'ACTUALIZADO'}</span></div><div class="grid" style="margin-top:10px"><div class="stat"><div class="num">${done}/${total}</div><div class="label">series hechas</div></div><div class="stat"><div class="num">${Math.round(volume).toLocaleString('es-CO')}</div><div class="label">kg de volumen</div></div><div class="stat"><div class="num">${mins!=null?mins+' min':'—'}</div><div class="label">duración</div></div><div class="stat"><div class="num">${prs.length}</div><div class="label">récords nuevos</div></div></div>${prs.length?`<p class="small" style="margin-bottom:0">🏆 ${prs.map(escHtml).join(' · ')}</p>`:''}</div>`;
+  render();
+  if(supabaseUser){data.gymDirty ||= {};data.gymDirty[key]=true;save();await flushGymDirty()}
+  sum.scrollIntoView({behavior:'smooth',block:'center'});
+  toast(prs.length?'🏆 ¡Entreno con '+prs.length+' récord'+(prs.length>1?'es':'')+'!':'💪 Entreno terminado');
+}
+
+// ---- Formulario para crear/editar ejercicios (reemplaza los prompt())
+function openExerciseDialog(rid,eid){
+  const r=exercises.find(x=>String(x.id)===String(rid));if(!r)return;const e=eid?r.items.find(x=>String(x.id)===String(eid)):null;
+  const dlg=document.getElementById('exDialog');dlg.dataset.rid=rid;dlg.dataset.eid=eid||'';
+  document.getElementById('exDlgTitle').textContent=e?'Editar ejercicio':'Nuevo ejercicio';
+  document.getElementById('exName').value=e?.nombre||'';document.getElementById('exGroup').value=e?.grupo||'';
+  document.getElementById('exSets').value=e?.series||4;document.getElementById('exReps').value=e?.reps||'8-12';document.getElementById('exRest').value=e?.descanso??90;
+  document.getElementById('exDlgMsg').textContent='';
+  if(dlg.showModal)dlg.showModal();else dlg.setAttribute('open','');
+  document.getElementById('exName').focus();
+}
+function closeExerciseDialog(){const d=document.getElementById('exDialog');if(d.close)d.close();else d.removeAttribute('open')}
+async function submitExerciseDialog(ev){
+  ev?.preventDefault?.();
+  const dlg=document.getElementById('exDialog'),msg=document.getElementById('exDlgMsg');
+  const r=exercises.find(x=>String(x.id)===dlg.dataset.rid);if(!r)return closeExerciseDialog();
+  const eid=dlg.dataset.eid,name=document.getElementById('exName').value.trim().slice(0,80),group=document.getElementById('exGroup').value.trim().slice(0,60);
+  const series=Math.round(Number(document.getElementById('exSets').value)),repsRaw=document.getElementById('exReps').value.trim()||'8-12',rest=Math.round(Number(document.getElementById('exRest').value));
+  const b=repsBounds(repsRaw);
+  if(!name){msg.textContent='Escribe el nombre del ejercicio.';return}
+  if(!(series>=1&&series<=20)){msg.textContent='Las series deben ser entre 1 y 20.';return}
+  if(!b){msg.textContent='Revisa las repeticiones (ej. 8-12, 15 o 30-45 segundos).';return}
+  if(!(rest>=0&&rest<=900)){msg.textContent='El descanso debe estar entre 0 y 900 segundos.';return}
+  if(r.items.some(x=>String(x.id)!==eid&&exKey(x.nombre)===exKey(name))){msg.textContent='Ese ejercicio ya está en esta rutina.';return}
+  if(!supabaseUser){msg.textContent='Inicia sesión para guardar ejercicios.';return}
+  const row={exercise_name:name,planned_sets:series,reps_min:b.min,reps_max:b.max,rest_seconds:rest,notes:'__RENOVA_IMPORT__|'+b.raw+'|'+group};
+  msg.textContent='Guardando…';
+  if(eid){
+    const res=await supabaseClient.from('routine_exercises').update(row).eq('user_id',supabaseUser.id).eq('id',eid);
+    if(res.error){msg.textContent='No se pudo guardar: '+res.error.message;return}
+    Object.assign(r.items.find(x=>String(x.id)===eid),{nombre:name,grupo:group,series,reps:b.raw,descanso:rest});
+  }else{
+    const ins=await supabaseClient.from('routine_exercises').insert({...row,user_id:supabaseUser.id,routine_id:r.id,day_number:1,exercise_order:r.items.length+1}).select('*').single();
+    if(ins.error){msg.textContent='No se pudo guardar: '+ins.error.message;return}
+    r.items.push({id:ins.data.id,nombre:name,grupo:group,series,reps:b.raw,descanso:rest});
+  }
+  data.gymRoutines=exercises;save();closeExerciseDialog();renderExercises();toast(eid?'Ejercicio actualizado':'Ejercicio agregado');
+}
+function addExerciseToRoutine(id){openExerciseDialog(id)}
+function editGymExercise(rid,eid){openExerciseDialog(rid,eid)}
+function saveProgress(){
+ const w=parseFloat(document.getElementById('weight').value),wa=parseFloat(document.getElementById('waist').value);
+ if(!(w>0)||!(wa>0)){toast('Completa peso y cintura');return}
+ const m={date:today(),weight:w,waist:wa};
+ data.measurements=(data.measurements||[]).filter(x=>x.date!==m.date);data.measurements.push(m);
+ data.measurements.sort((a,b)=>a.date<b.date?-1:a.date>b.date?1:0);
+ save();if(supabaseUser&&measurementsCloud)queueMeasurement(m);
+ toast('Medición guardada');render()
+}
+function renderTrend(){const e=document.getElementById('trend');if(!e)return;if(data.measurements.length<2){e.innerHTML='<div class="empty">Registra al menos 2 mediciones para ver tendencia.</div>';return}const a=data.measurements.slice(-6);const first=a[0],last=a[a.length-1],dw=(last.weight-first.weight).toFixed(1),dc=(last.waist-first.waist).toFixed(1);e.innerHTML=`<div class="grid"><div class="stat"><div class="num">${dw>0?'+':''}${dw} kg</div><div class="label">cambio de peso</div></div><div class="stat"><div class="num">${dc>0?'+':''}${dc} cm</div><div class="label">cambio de cintura</div></div></div><div class="small" style="margin-top:10px">${a.map(x=>`${escHtml(x.date)}: ${x.weight} kg · ${x.waist} cm`).join('<br>')}</div>`}
+function renderHistory(){let h=document.getElementById('history');if(!data.measurements.length){h.innerHTML='<div class="empty">Aún no hay mediciones.</div>';return}h.innerHTML=data.measurements.slice().reverse().map(x=>`<div class="check"><span><b>${escHtml(x.date)}</b><br><span class="small">${x.weight} kg · ${x.waist} cm cintura</span></span></div>`).join('')}
+function dayIndex(){if(!lsGet(startKey))lsSet(startKey,today());let a=new Date(lsGet(startKey)),b=new Date(today());return Math.min(84,Math.max(1,Math.floor((b-a)/86400000)+1))}
+function streak(){
+ if(!checklist.length)return 0;
+ const required=Math.max(1,Math.ceil(checklist.length*0.6));
+ const ok=date=>{const x=data.days[date];return !!x&&checklist.filter(q=>x.checks?.[q[0]]).length>=required};
+ let s=0,date=today();if(!ok(date))date=addDays(date,-1);   // hoy aún no cuenta en contra
+ for(let i=0;i<365&&ok(date);i++){s++;date=addDays(date,-1)}
+ return s;
+}
+function exportData(){let blob=new Blob([JSON.stringify({version:'RENOVA-v2',exportedAt:nowIso(),data,start:lsGet(startKey)},null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='RENOVA-backup-'+today()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function importData(e){
+ const f=e.target.files[0];e.target.value='';if(!f)return;
+ const r=new FileReader();
+ r.onload=async()=>{
+  let o;try{o=JSON.parse(r.result)}catch{toast('Archivo no válido');return}
+  if(!o||!o.data||typeof o.data.days!=='object'){toast('El archivo no parece un respaldo de RENOVA');return}
+  if(!confirm('Se cargará el respaldo en este dispositivo y se subirá a la nube lo que falte. Lo que ya está en la nube se conserva. ¿Continuar?'))return;
+  data=Object.assign(emptyData(),o.data);data.habitsMigrated=false;
+  ['measurements','customHabits','checklistItems','shoppingList','gymRoutines'].forEach(k=>{if(!Array.isArray(data[k]))data[k]=[]});
+  checklist=data.checklistItems.filter(x=>Array.isArray(x)&&x[1]).map(x=>[String(x[0]),String(x[1])]);exercises=data.gymRoutines;
+  if(o.start&&!lsGet(startKey))lsSet(startKey,o.start);
+  save();render();
+  if(supabaseUser){try{await pullFromCloud();toast('Respaldo importado y sincronizado')}catch(err){console.error(err);toast('Importado en este dispositivo; la nube se sincronizará luego')}}
+  else toast('Respaldo importado');
+ };
+ r.readAsText(f);
+}
+function resetAll(){
+ const n=syncQueue.length;
+ if(!confirm('¿Borrar la copia de RENOVA guardada en ESTE dispositivo?\n\nTus datos en la nube NO se borran: se volverán a descargar al iniciar sesión.'+(n?'\n\n⚠️ Hay '+n+' cambios sin subir que se perderán.':'')))return;
+ lsDel(KEY);lsDel(startKey);lsDel(queueKey);location.reload();
+}
+
+const MENUS=[
+ {title:'Día 1 · Pollo & arroz',items:['Desayuno: 3 huevos + 2 claras + arepa pequeña + fruta','Almuerzo: 180 g pollo + 150 g arroz cocido + ensalada + 1 cdita aceite','Cena: 180 g carne magra + papa mediana + verduras']},
+ {title:'Día 2 · Carne & papa',items:['Desayuno: 2 huevos + 120 g claras + avena + banano pequeño','Almuerzo: 180 g carne magra + 250 g papa + ensalada','Cena: 180 g pollo + 120 g arroz cocido + verduras']},
+ {title:'Día 3 · Pollo & pasta',items:['Desayuno: tortilla de 3 huevos + queso bajo en grasa + fruta','Almuerzo: 180 g pollo + 140 g pasta cocida + verduras','Cena: 180 g carne magra + 200 g papa + ensalada']},
+ {title:'Día 4 · Arroz & huevos',items:['Desayuno: 3 huevos + 2 claras + arepa + fruta','Almuerzo: 180 g carne magra + 150 g arroz + ensalada','Cena: 180 g pollo + 200 g papa + verduras']},
+ {title:'Día 5 · Pollo & arepa',items:['Desayuno: 3 huevos + queso + arepa pequeña + fruta','Almuerzo: 180 g pollo + 150 g arroz + ensalada','Cena: 180 g carne magra + papa + verduras']},
+ {title:'Día 6 · Flexible controlado',items:['Desayuno: huevos + avena + fruta','Almuerzo: proteína magra 180 g + carbohidrato 1 porción + verduras','Cena: proteína magra 180 g + verduras + carbohidrato pequeño']},
+ {title:'Día 7 · Recuperación',items:['Desayuno: huevos + arepa + fruta','Almuerzo: pollo 180 g + arroz 150 g + ensalada','Cena: carne magra 180 g + papa + verduras']}
+];
+function renderMenus(){const idx=(dayIndex()-1)%7,m=MENUS[idx];const tm=document.getElementById('todayMenu');if(tm)tm.innerHTML=m.items.map(x=>`<div class="check"><span>${x}</span></div>`).join('');const tag=document.getElementById('menuDayTag');if(tag)tag.textContent='Día '+(idx+1);const wm=document.getElementById('weekMenus');if(wm)wm.innerHTML=MENUS.map((x,i)=>`<div class="menu-box"><div class="menu-day">DÍA ${i+1}</div><div class="menu-title">${x.title}</div><div class="small">${x.items.join(' · ')}</div></div>`).join('')}
+function generateShoppingList(){const list=['Huevos','Pollo','Carne magra','Arroz','Papa','Avena','Arepas','Pasta','Frutas','Verduras variadas','Queso bajo en grasa','Aceite de oliva'];data.shoppingList=list;save();if(supabaseUser)queueShop();renderShoppingList();toast('Lista de compras generada')}
+function renderShoppingList(){const e=document.getElementById('shoppingList');if(!e)return;e.innerHTML=(data.shoppingList||[]).length?'<div class="pill-row">'+data.shoppingList.map(x=>`<span class="pill">${escHtml(x)}</span>`).join('')+'</div>':'Genera una lista según los menús de la semana.'}
+function saveAgendaSettings(){data.agenda={breakfast:document.getElementById('timeBreakfast').value,lunch:document.getElementById('timeLunch').value,gym:document.getElementById('timeGym').value,dinner:document.getElementById('timeDinner').value,sleep:document.getElementById('timeSleep').value,measure:document.getElementById('timeMeasure').value};save();if(supabaseUser)queuePrefs();renderAgenda();toast('Horarios guardados')}
+function renderAgenda(){const a=data.agenda||{},vals={timeBreakfast:a.breakfast||'07:00',timeLunch:a.lunch||'13:00',timeGym:a.gym||'19:00',timeDinner:a.dinner||'21:15',timeSleep:a.sleep||'23:00',timeMeasure:a.measure||'06:00'};Object.entries(vals).forEach(([id,v])=>{const e=document.getElementById(id);if(e)e.value=v});const e=document.getElementById('todayAgenda');if(!e)return;const items=[['🍳',a.breakfast||'07:00','Desayuno'],['🍛',a.lunch||'13:00','Almuerzo'],['🏋️',a.gym||'19:00','Entrenamiento'],['🥗',a.dinner||'21:15','Cena'],['😴',a.sleep||'23:00','Dormir'],['📏',a.measure||'06:00','Medición semanal']];e.innerHTML=items.map(x=>`<div class="agenda-item"><div class="agenda-time">${x[0]} ${x[1]}</div><div class="agenda-title">${x[2]}</div></div>`).join('')}
+let calendarToken=null;const CALENDAR_SCOPE='https://www.googleapis.com/auth/calendar.events';
+function calendarMsg(t){const e=document.getElementById('calendarStatus');if(e)e.textContent=t}
+function setCalendarTag(t){const e=document.getElementById('calendarTag');if(e)e.textContent=t}
+function connectCalendar(){if(!currentUser){toast('Primero inicia sesión con Google');return}if(!window.google?.accounts?.oauth2){calendarMsg('Google todavía está cargando.');return}window._calendarTokenClient=google.accounts.oauth2.initTokenClient({client_id:CLIENT_ID,scope:CALENDAR_SCOPE,callback:async(resp)=>{if(resp.error){console.error('Calendar OAuth error',resp);calendarMsg('❌ No se pudo autorizar Calendar: '+(resp.error_description||resp.error));setCalendarTag('LOCAL');return}calendarToken=resp.access_token;sessionStorage.setItem('reset12_calendar_token',calendarToken);localStorage.setItem(userKey(currentUser.email,'reset12_calendar_connected'),'1');setCalendarTag('CLOUD');calendarMsg('🟢 Google Calendar conectado en esta sesión.');toast('Calendar conectado');await renderCalendarEvents()}});window._calendarTokenClient.requestAccessToken({prompt:''})}
+async function calendarFetch(url,options={}){if(!calendarToken)throw new Error('NO_CAL_TOKEN');options.headers=Object.assign({},options.headers||{},{Authorization:'Bearer '+calendarToken,'Content-Type':'application/json'});const r=await fetch(url,options);if(r.status===401){calendarToken=null;setCalendarTag('LOCAL');throw new Error('CAL_AUTH_EXPIRED')}if(!r.ok){const body=await r.text();console.error('Calendar API error',r.status,body);throw new Error('CAL_API_'+r.status+'_'+body)}return r}
+function isoFor(date,time){return new Date(`${date}T${time||'07:00'}:00-05:00`).toISOString()}
+function eventId(date,type){return ('reset12'+date.replace(/-/g,'')+type).replace(/[^a-v0-9]/gi,'').toLowerCase()}
+function calendarEvent(date,type,time,title,duration){const start=isoFor(date,time),end=new Date(new Date(start).getTime()+duration*60000).toISOString();return {id:eventId(date,type),summary:'RENOVA · '+title,description:'Evento creado por RENOVA · constancia sobre perfección.',start:{dateTime:start,timeZone:'America/Bogota'},end:{dateTime:end,timeZone:'America/Bogota'},reminders:{useDefault:true}}}
+async function insertCalendarEvent(ev,notify=false){const qs='sendUpdates='+(notify?'all':'none');try{await calendarFetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?'+qs,{method:'POST',body:JSON.stringify(ev)});return true}catch(e){if(String(e.message).includes('CAL_API_409'))return true;throw e}}
+async function syncCalendarWeek(){if(!calendarToken){calendarMsg('Conecta Google Calendar primero.');toast('Pulsa Conectar');return}try{calendarMsg('Sincronizando 7 días…');const a=data.agenda||{};const todayD=new Date();const sel=calendarSyncSelection();const jobs=CAL_SYNC_ITEMS.filter(j=>sel.includes(j[0]));if(!jobs.length){calendarMsg('Elige al menos un bloque para enviar.');return}for(let i=0;i<7;i++){const d=new Date(todayD);d.setDate(todayD.getDate()+i);const date=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');for(const [key,type,title,dur] of jobs)await insertCalendarEvent(calendarEvent(date,type,a[key],title,dur),false)}calendarMsg('🟢 Semana enviada ('+jobs.map(j=>j[2]).join(', ')+') sin duplicar eventos.');toast('Semana enviada a Calendar');await renderCalendarEvents()}catch(e){console.error(e);calendarMsg('❌ Error Calendar: '+(e.message||'revisa el permiso y la API'));toast('Error con Calendar')}}
+function escHtml(v){return String(v||'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function setDefaultEventDate(){const e=document.getElementById('eventDate');if(e&&!e.value)e.value=today()}
+function calcEventTimes(){const d=document.getElementById('eventDuration')?.value;const wrap=document.getElementById('eventEndWrap');if(wrap)wrap.style.display=d==='custom'?'block':'none';if(d!=='custom'){const st=document.getElementById('eventStart')?.value||'08:00';const [h,m]=st.split(':').map(Number);const end=new Date(2000,0,1,h,m);end.setMinutes(end.getMinutes()+Number(d||60));const e=document.getElementById('eventEnd');if(e)e.value=String(end.getHours()).padStart(2,'0')+':'+String(end.getMinutes()).padStart(2,'0')}}
+function eventDurationMinutes(start,end){const [sh,sm]=start.split(':').map(Number),[eh,em]=end.split(':').map(Number);let mins=(eh*60+em)-(sh*60+sm);if(mins<=0)mins+=1440;return mins}
+function makeRecurrence(repeat,date){if(repeat==='weekly')return ['RRULE:FREQ=WEEKLY'];if(repeat==='monthly')return ['RRULE:FREQ=MONTHLY'];return undefined}
+async function createCalendarEventFromForm(){
+  if(!calendarToken){calendarMsg('Conecta Google Calendar primero.');toast('Pulsa Conectar');return}
+  const title=(document.getElementById('eventTitle')?.value||'').trim(),date=document.getElementById('eventDate')?.value||today(),startTime=document.getElementById('eventStart')?.value||'08:00',durationSel=document.getElementById('eventDuration')?.value||'60';
+  if(!title){toast('Escribe el título del evento');document.getElementById('eventTitle')?.focus();return}
+  let endTime;
+  if(durationSel==='custom') endTime=document.getElementById('eventEnd')?.value||''; else {calcEventTimes();endTime=document.getElementById('eventEnd')?.value||'09:00'}
+  if(!endTime){toast('Define la hora de finalización');return}
+  const duration=eventDurationMinutes(startTime,endTime), location=(document.getElementById('eventLocation')?.value||'').trim(), description=(document.getElementById('eventDescription')?.value||'').trim(), reminder=Number(document.getElementById('eventReminder')?.value||30), repeat=document.getElementById('eventRepeat')?.value||'none', meet=document.getElementById('eventMeet')?.checked;
+  const raw=(document.getElementById('eventAttendees')?.value||'').split(/[;,\s]+/).map(x=>x.trim().toLowerCase()).filter(Boolean);
+  const attendees=[...new Set(raw.filter(x=>/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(x)))].map(email=>({email}));
+  if(raw.length!==attendees.length){toast('Revisa los correos de invitados');return}
+  const event={id:'r12'+Date.now().toString(32)+Math.random().toString(32).slice(2,8),summary:title,description:description||undefined,location:location||undefined,start:{dateTime:isoFor(date,startTime),timeZone:'America/Bogota'},end:{dateTime:isoFor(date,endTime),timeZone:'America/Bogota'},attendees:attendees.length?attendees:undefined,reminders:{useDefault:false,overrides:[{method:'popup',minutes:reminder}]}};
+  const rec=makeRecurrence(repeat,date);if(rec)event.recurrence=rec;
+  let url='https://www.googleapis.com/calendar/v3/calendars/primary/events?sendUpdates='+(attendees.length?'all':'none');
+  if(meet){event.conferenceData={createRequest:{requestId:'r12meet'+Date.now().toString(32)+Math.random().toString(32).slice(2,8),conferenceSolutionKey:{type:'hangoutsMeet'}}};url+='&conferenceDataVersion=1'}
+  const status=document.getElementById('eventCreateStatus');if(status)status.textContent='Creando evento…';
+  try{const r=await calendarFetch(url,{method:'POST',body:JSON.stringify(event)});const created=await r.json();let msg='🟢 Evento creado en Google Calendar.';if(created.htmlLink)msg+=' <a href="'+escHtml(created.htmlLink)+'" target="_blank" rel="noopener">Abrir Calendar</a>';if(created.hangoutLink)msg+=' · <a href="'+escHtml(created.hangoutLink)+'" target="_blank" rel="noopener">Abrir Meet</a>';if(status)status.innerHTML=msg;toast('Evento agendado');document.getElementById('eventTitle').value='';document.getElementById('eventDescription').value='';document.getElementById('eventLocation').value='';document.getElementById('eventAttendees').value='';document.getElementById('eventMeet').checked=false;await renderCalendarEvents()}catch(e){console.error(e);if(status)status.textContent='❌ No se pudo crear: '+(e.message||'error de Calendar');toast('No se pudo crear el evento')}}
+async function renderCalendarEvents(){const e=document.getElementById('calendarEvents');if(!e)return;if(!calendarToken){e.innerHTML='<div class="empty">Conecta Calendar para ver tus próximos eventos.</div>';return}try{const now=new Date().toISOString(),r=await calendarFetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin='+encodeURIComponent(now)+'&maxResults=10&singleEvents=true&orderBy=startTime');const j=await r.json();if(!j.items?.length){e.innerHTML='<div class="empty">No hay eventos próximos.</div>';return}e.innerHTML=j.items.map(x=>{const st=x.start?.dateTime||x.start?.date;const meet=x.hangoutLink?` · <a href="${escHtml(x.hangoutLink)}" target="_blank" rel="noopener">Meet</a>`:'';return `<div class="check"><span><b>${escHtml(x.summary||'Sin título')}</b><br><span class="small">${new Date(st).toLocaleString('es-CO',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}${meet}</span></span></div>`}).join('')}catch(err){if(err.message==='CAL_AUTH_EXPIRED')calendarMsg('Sesión de Calendar vencida. Pulsa Conectar.');e.innerHTML='<div class="empty">No fue posible leer Calendar.</div>'}}
+function bootCalendar(){const connected=currentUser&&lsGet(userKey(currentUser.email,'reset12_calendar_connected'))==='1';if(connected){setCalendarTag('CLOUD');calendarMsg('Calendar autorizado anteriormente. Pulsa Conectar para usarlo en esta sesión.')}setDefaultEventDate();calcEventTimes()}
+
+const CAL_SYNC_ITEMS=[['gym','gym','Entrenamiento',120],['breakfast','desayuno','Desayuno',30],['lunch','almuerzo','Almuerzo',45],['dinner','cena','Cena',30],['sleep','sleep','Dormir',480]];
+function calendarSyncSelection(){return Array.isArray(data.calendarSync)?data.calendarSync:['gym']}
+function toggleCalendarSync(key,on){const s=new Set(calendarSyncSelection());on?s.add(key):s.delete(key);data.calendarSync=[...s];save()}
+function renderCalSyncPrefs(){const e=document.getElementById('calSyncPrefs');if(!e)return;const sel=calendarSyncSelection();e.innerHTML=CAL_SYNC_ITEMS.map(([k,,t])=>`<label class="pill" style="display:inline-flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" style="width:16px;height:16px" ${sel.includes(k)?'checked':''} onchange="toggleCalendarSync('${k}',this.checked)">${t}</label>`).join('')}
+
+function showAccount(){
+  const chip=document.getElementById('accountChip'),card=document.getElementById('profileCard'),name=document.getElementById('profileName'),email=document.getElementById('profileEmail'),avatar=document.getElementById('profileAvatar');
+  if(!currentUser)return;
+  const displayName=currentUser.name||currentUser.email.split('@')[0]||'Usuario';
+  if(chip){chip.textContent='👤 '+displayName;chip.style.display='block'}
+  if(card)card.style.display='block';
+  if(name)name.textContent=displayName;
+  if(email)email.textContent=currentUser.email;
+  if(avatar){if(currentUser.picture){avatar.innerHTML='<img alt="" referrerpolicy="no-referrer" src="'+escHtml(currentUser.picture)+'">'}else{avatar.textContent=displayName.charAt(0).toUpperCase()}}
+}
+function finishLogin(profile){
+  currentUser={email:profile.email||'',name:profile.name||'Usuario',picture:profile.picture||''};
+  if(!currentUser.email){toast('No se pudo identificar tu cuenta');return false}
+  lsSet('reset12_user',JSON.stringify(currentUser));
+  loadUserData(currentUser.email);
+  document.getElementById('loginOverlay').style.display='none';
+  showAccount();render();bootCalendar();updateSyncPill();
+  return true;
+}
+async function initGoogleLogin(){
+  const host=document.getElementById('googleSignInButton');if(!host)return;
+  host.innerHTML='<button type="button" class="btn" style="width:100%;background:#fff;color:#222;border-radius:999px" id="supabaseGoogleLogin">🌐 Acceder con Google</button>';
+  document.getElementById('supabaseGoogleLogin').onclick=async()=>{
+    try{const {error}=await supabaseClient.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+location.pathname,queryParams:{access_type:'offline',prompt:'select_account'}}});if(error)throw error;}
+    catch(e){console.error(e);toast('No se pudo iniciar sesión: '+(e.message||'error'));}
+  };
+}
+async function handleSupabaseSession(session){
+  if(!session?.user){
+    supabaseUser=null;currentUser=null;loadedForUserId=null;
+    document.getElementById('loginOverlay').style.display='flex';await initGoogleLogin();updateSyncPill();return;
+  }
+  supabaseUser=session.user;
+  if(loadedForUserId===session.user.id){flushQueue();return}   // p. ej. renovación del token
+  loadedForUserId=session.user.id;
+  const meta=session.user.user_metadata||{};
+  if(!finishLogin({email:session.user.email||'',name:meta.full_name||meta.name||session.user.email?.split('@')[0]||'Usuario',picture:meta.avatar_url||meta.picture||''}))return;
+  setProfileStatus('⏳ Cargando tus datos de la nube…');
+  try{
+    const r=await pullFromCloud();
+    setProfileStatus(!habitsCloud||!measurementsCloud?'⚠️ Falta ejecutar el SQL de la Fase 1':'☁️ Datos sincronizados');
+    if(r?.pushedSessions)toast(r.pushedSessions===1?'Se subió 1 sesión de gym que estaba solo en este teléfono':'Se subieron '+r.pushedSessions+' sesiones de gym que estaban solo en este teléfono');
+  }catch(e){console.error('RENOVA carga nube:',e);setProfileStatus('⚠️ Sin acceso a la nube; usando datos de este dispositivo')}
+}
+function showAccountInfo(){
+  if(!currentUser)return;
+  alert(['RENOVA','','Cuenta: '+currentUser.email,'Nombre: '+(currentUser.name||'Usuario'),'','Estado: '+(document.getElementById('syncPill')?.textContent||''),'Cambios pendientes de subir: '+syncQueue.length].join('\n'));
+}
+async function logoutRenova(){
+  const n=syncQueue.length;
+  if(!confirm('¿Cerrar sesión de RENOVA en este dispositivo?'+(n?'\n\n⚠️ Hay '+n+' cambios sin subir; se subirán cuando vuelvas a entrar.':'')))return;
+  calendarToken=null;sessionStorage.removeItem('reset12_calendar_token');
+  try{await supabaseClient.auth.signOut()}catch(e){console.error(e)}
+  lsDel('reset12_user');currentUser=null;supabaseUser=null;loadedForUserId=null;
+  document.getElementById('profileCard').style.display='none';document.getElementById('accountChip').style.display='none';document.getElementById('loginOverlay').style.display='flex';initGoogleLogin();updateSyncPill();
+}
+async function boot(){
+  document.getElementById('loginOverlay').style.display='flex';
+  await initGoogleLogin();
+  const {data:{session},error}=await supabaseClient.auth.getSession();
+  if(error)console.error('Supabase session:',error);
+  await handleSupabaseSession(session);
+  supabaseClient.auth.onAuthStateChange((event,session)=>{if(['SIGNED_IN','TOKEN_REFRESHED','SIGNED_OUT'].includes(event))setTimeout(()=>handleSupabaseSession(session),0)});
+}
+window.addEventListener('load',()=>{
+  if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js?v=renova-v6').catch(e=>console.warn('SW',e));
+  boot();
+});
+</script>
+</body></html>
