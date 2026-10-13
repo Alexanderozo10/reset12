@@ -2,23 +2,23 @@
 // Red primero para todo lo del propio sitio (así cada publicación se ve al instante)
 // y caché como respaldo para abrir sin conexión.
 // Al publicar cambios: sube la versión en make_dist.py (o pásala como argumento).
-const CACHE_VERSION = 'renova-cache-v7';
+const CACHE_VERSION = 'renova-cache-v8';
 const APP_SHELL = [
   './',
   './index.html',
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png',
-  './css/app.css?v=7',
-  './js/core.js?v=7',
-  './js/ui.js?v=7',
-  './js/gym-routines.js?v=7',
-  './js/gym-session.js?v=7',
-  './js/progress.js?v=7',
-  './js/dashboard.js?v=7',
-  './js/nutrition.js?v=7',
-  './js/agenda.js?v=7',
-  './js/auth.js?v=7'
+  './css/app.css?v=8',
+  './js/core.js?v=8',
+  './js/ui.js?v=8',
+  './js/gym-routines.js?v=8',
+  './js/gym-session.js?v=8',
+  './js/progress.js?v=8',
+  './js/dashboard.js?v=8',
+  './js/nutrition.js?v=8',
+  './js/agenda.js?v=8',
+  './js/auth.js?v=8'
 ];
 
 self.addEventListener('install', event => {
