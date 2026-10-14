@@ -21,5 +21,59 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
+  ],
+  "shortcuts": [
+    {
+      "name": "Tomar agua +500 ml",
+      "short_name": "+500 ml agua",
+      "description": "Suma 500 ml al agua de hoy",
+      "url": "./?accion=agua",
+      "icons": [
+        {
+          "src": "icons/agua.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Marcar hábitos",
+      "short_name": "Hábitos",
+      "description": "Abre tu checklist de hábitos de hoy",
+      "url": "./?accion=habitos",
+      "icons": [
+        {
+          "src": "icons/habitos.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Entrenamiento de hoy",
+      "short_name": "Entreno",
+      "description": "Abre Gym con la rutina sugerida",
+      "url": "./?accion=entreno",
+      "icons": [
+        {
+          "src": "icons/entreno.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Registrar que comí",
+      "short_name": "Comí",
+      "description": "Marca como hecha la comida de esta hora",
+      "url": "./?accion=comi",
+      "icons": [
+        {
+          "src": "icons/comi.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
   ]
 }
