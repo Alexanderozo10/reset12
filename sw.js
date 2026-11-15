@@ -2,7 +2,7 @@
 // Red primero para todo lo del propio sitio (así cada publicación se ve al instante)
 // y caché como respaldo para abrir sin conexión.
 // Al publicar cambios: sube la versión en make_dist.py (o pásala como argumento).
-const CACHE_VERSION = 'renova-cache-v24';
+const CACHE_VERSION = 'renova-cache-v25';
 const APP_SHELL = [
   './',
   './index.html',
@@ -18,17 +18,18 @@ const APP_SHELL = [
   './icons/habitos.png',
   './icons/entreno.png',
   './icons/comi.png',
-  './css/app.css?v=24',
-  './js/core.js?v=24',
-  './js/ui.js?v=24',
-  './js/gym-routines.js?v=24',
-  './js/gym-session.js?v=24',
-  './js/progress.js?v=24',
-  './js/dashboard.js?v=24',
-  './js/nutrition.js?v=24',
-  './js/agenda.js?v=24',
-  './js/shortcuts.js?v=24',
-  './js/auth.js?v=24'
+  './css/app.css?v=25',
+  './js/core.js?v=25',
+  './js/ui.js?v=25',
+  './js/gym-routines.js?v=25',
+  './js/gym-library.js?v=25',
+  './js/gym-session.js?v=25',
+  './js/progress.js?v=25',
+  './js/dashboard.js?v=25',
+  './js/nutrition.js?v=25',
+  './js/agenda.js?v=25',
+  './js/shortcuts.js?v=25',
+  './js/auth.js?v=25'
 ];
 
 self.addEventListener('install', event => {

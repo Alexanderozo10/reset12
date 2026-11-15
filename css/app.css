@@ -66,3 +66,6 @@ input,textarea,select{width:100%;padding:11px 12px;border:1px solid var(--line);
 .focuscard{border-color:var(--accent)}.focusrow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line)}.focusrow:first-of-type{border-top:0}.focusbtns{display:flex;gap:6px;flex:none}
 .closedlg{max-width:520px;width:calc(100% - 24px);max-height:90vh;overflow:auto}.cdsec{padding:10px 0;border-top:1px solid var(--line)}.cdhl{border:1px solid var(--accent);border-radius:12px;padding:10px;margin-bottom:6px}.cdmeal{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:8px}.cdhab{display:flex;gap:8px;align-items:center;padding:6px 0;font-size:14px}.cdhab input{width:auto}.cdhab.on{color:var(--muted);text-decoration:line-through}
 .hctoken{margin:8px 0;padding:10px;border:1px dashed var(--accent);border-radius:12px}.hctoken code{display:block;word-break:break-all;margin:6px 0;font-size:13px}.hcguide{margin-top:10px}.hcguide summary{cursor:pointer;font-weight:700}.hcguide code{word-break:break-all}.hcguide ol{padding-left:18px}
+
+/* Biblioteca de ejercicios (v25) */
+.libitem{display:grid;gap:2px;text-align:left;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:transparent;color:inherit;cursor:pointer}

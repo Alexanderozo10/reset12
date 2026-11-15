@@ -13,7 +13,7 @@
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <title>RENOVA · Construye tu mejor versión</title>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-<link rel="stylesheet" href="css/app.css?v=24">
+<link rel="stylesheet" href="css/app.css?v=25">
 </head>
 <body>
 
@@ -178,6 +178,14 @@
   <div id="exDlgMsg" class="small" role="alert" style="color:#ff9b9b;margin-top:8px"></div>
   <div class="two" style="margin-top:12px"><button type="button" class="btn secondary" onclick="closeExerciseDialog()">Cancelar</button><button type="submit" class="btn">Guardar</button></div>
 </form></dialog>
+<dialog id="libDialog" aria-labelledby="libDlgTitle"><form method="dialog" onsubmit="event.preventDefault()">
+  <h2 id="libDlgTitle" style="margin:0 0 10px;font-size:20px">Cambiar ejercicio</h2>
+  <input id="libSearch" type="search" placeholder="Buscar ejercicio o grupo" oninput="renderLibraryList()" aria-label="Buscar ejercicio">
+  <div id="libFilters" class="wkchips" style="margin-top:8px"></div>
+  <div id="libList" style="margin-top:8px;display:grid;gap:6px;max-height:50vh;overflow:auto"></div>
+  <div id="libMsg" class="small" role="alert" style="color:#ff9b9b;margin-top:8px"></div>
+  <div class="two" style="margin-top:12px"><button type="button" class="btn secondary" onclick="closeLibraryDialog()">Cerrar</button></div>
+</form></dialog>
 <dialog id="recipeDialog" aria-labelledby="recipeDlgTitle"><form method="dialog" onsubmit="submitRecipe(event)">
   <h2 id="recipeDlgTitle" style="margin:0 0 10px;font-size:20px">Mi receta</h2>
   <div id="recipeDlgBody"></div>
@@ -187,14 +195,15 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="js/core.js?v=24"></script>
-<script src="js/ui.js?v=24"></script>
-<script src="js/gym-routines.js?v=24"></script>
-<script src="js/gym-session.js?v=24"></script>
-<script src="js/progress.js?v=24"></script>
-<script src="js/dashboard.js?v=24"></script>
-<script src="js/nutrition.js?v=24"></script>
-<script src="js/agenda.js?v=24"></script>
-<script src="js/shortcuts.js?v=24"></script>
-<script src="js/auth.js?v=24"></script>
+<script src="js/core.js?v=25"></script>
+<script src="js/ui.js?v=25"></script>
+<script src="js/gym-routines.js?v=25"></script>
+<script src="js/gym-library.js?v=25"></script>
+<script src="js/gym-session.js?v=25"></script>
+<script src="js/progress.js?v=25"></script>
+<script src="js/dashboard.js?v=25"></script>
+<script src="js/nutrition.js?v=25"></script>
+<script src="js/agenda.js?v=25"></script>
+<script src="js/shortcuts.js?v=25"></script>
+<script src="js/auth.js?v=25"></script>
 </body></html>
